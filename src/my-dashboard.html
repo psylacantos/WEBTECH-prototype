@@ -1,0 +1,1304 @@
+<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">	
+<link rel="import" href="../bower_components/iron-label/iron-label.html">	
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">	
+<link rel="import" href="../bower_components/paper-input/paper-input.html">	
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">	
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">		
+<link rel="import" href="my-home.html">		
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="User.js"></script>
+
+<dom-module id="my-dashboard">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+		:host {
+			display: block;
+			padding: 16px;
+		}
+		
+		.nav {
+			width: 100%;
+			height: 60px;
+			justify-content: flex-start;
+			margin: 4px 0px;
+			background-color: #66ccff;
+			display: flex;
+			
+		}
+		
+		.header {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		
+		.logo {
+			width: 80px;
+			height: 70px;
+			
+		}
+		
+		.inputSearch {
+			width: 50%;
+			height: 50px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			font-size: 15px;
+			background-color: white;
+			background-image: url('images/search.png');
+			background-size: 25px 25px;
+			background-position: 10px 11px; 
+			background-repeat: no-repeat;
+			padding: 12px 20px 12px 40px;
+			margin-top: 4px;
+		}
+		
+		.component {
+			width: 45%;
+			height: 50px;
+			margin-top: 10px;
+			margin-right: 10px;
+			display: flex;
+			justify-content: flex-end;
+		}
+		
+		.component paper-icon-button:hover {
+			background-color: #f49ac7;
+		}
+		
+		.profile {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin-top: 20px;
+		}
+		
+		#pic {
+			max-width: 150px;
+			min-width: 150px;
+		}
+		#circle {
+			display: flex;
+			width: 10px;
+			height: 10px;
+			max-width: 10px;
+			min-width: 10px;
+			border-radius: 50px;
+			background: green;
+			margin-left: 5px;
+			margin-top: 6.5px;
+		}
+		.details{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		
+		}
+		.name {
+			display: flex;
+		}
+		
+		.uname {
+			display: flex;
+			margin-top: -15px;
+		}
+
+		.numposts{
+			margin-left: -200px;
+			margin-top: -1px;
+		}
+		.posts {
+			display: flex;
+			margin-left: -200px;
+			margin-top: -15px;
+		}
+		
+		.numlikes {
+			display: flex;
+			margin-left: 0px;
+			margin-top: -63px;
+		}
+		
+		.likes{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 0px;
+		}
+		
+		.numfollowers{
+			display: flex;
+			margin-left: 200px;
+			margin-top: -63px; 
+		}
+		
+		.followers{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 200px;
+		}
+		.hr{
+			background-color: white;
+		}
+		.style1{
+			border-top: 2px solid #000000;
+		}
+		.content button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		
+		.content button:hover{
+			background-color: #6a7eed;
+		}
+		.follow, .chat, .other{
+			float: right;
+		}
+		
+		.card{
+			display: flex;
+			background-color: #66ccff;
+			margin-left: -15px;
+			padding: 10px 10px;
+		}
+		
+		.comment-card {
+			display: flex;
+			background-color: #66ccff;
+			margin-left: -15px;
+			margin-top: -5px;
+			padding: 10px 10px;
+		}
+		
+		#user {
+			width: 70px;
+			height: 70px;
+			margin-top: 10px;
+			margin-left: 10px;
+		}
+
+		
+		.card h4{
+			margin-top: 20px;
+			
+		}
+		
+		.post-card {
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			transition: 0.3s;
+			width: 80%;
+			background-color: white;
+			border-radius: 5px;
+			margin: 0.5cm 0cm 0.10cm 0cm;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
+		
+		.p-title{
+			font-size: 20px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			margin-top: 35px;
+			margin-left: 20px;
+			margin-right: 20px;
+			width: 90%;
+			background-color: white;
+		}
+		
+		.p-description{
+			font-size: 14px;
+			color: black;
+			text-align: left;
+			margin-top: -10px;
+			margin-left: 20px;
+			width: 90%;
+			background-color: white;
+		}
+		
+		.p-comment{
+			font-size:15px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			display: inline-block;
+			margin-top: 40px;
+		}
+		
+		.p-check, .p-wrong{
+			font-size:15px;
+			font-weight: bold;
+			color: black;
+			text-align: right;
+			display: inline-block;
+			float: right;
+			margin-top: 40px;
+		}
+		
+
+		#content {
+			width: 20%;
+			float: left;
+			padding: 5px 15px;
+			margin-top: -15px;
+			/* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); shadow ung malaki*/
+		}
+		.rec1{
+			/*box-shadow: 0px 8px 10px 0 rgba(0,0,0,0.2);*/
+			letter-spacing: 0px;
+			word-spacing: 0.5px;
+			background-color: #cbfffa;
+			font-size: 14px;
+			margin-bottom: 10px;
+			margin-top: 0;
+			margin-left: 10px;
+			
+		}
+		.categories{
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			letter-spacing: 4px;
+			word-spacing: 4px;	
+			background-color: #cbfffa;
+			margin-left: -15px;
+			width: 105%;
+		}
+		footer {
+			clear: both;
+			padding: 0 15px;
+			width:100%;
+			float: center;
+			background: #003399;
+			height:100px;
+			margin-top: 10;	
+		}
+		#sidebar {
+			width: 18%;
+			float: left;
+			background-color: #cbfffa;
+			height: 100%;
+			padding-left: 10px;
+			padding-bottom: 10px;
+			padding-right: 10px;
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+		}
+		#middle {
+			width: 50%; /* Account for margins + border values */
+			float: left;
+			padding: 5px 15px;
+		}
+		.trend{
+			box-shadow: 0px 8px 10px 0 rgba(0,0,0,0.2);
+			letter-spacing: 0px;
+			word-spacing: 2px;
+			background-color: white;
+			font-size: 15px;
+			margin-bottom: 0px;
+			margin-top: 0;
+			
+		}
+
+		.logout {
+			padding: 50px 10px;
+			font-size: 30px;
+			font-weight: bold;
+			color: white;
+
+		}
+
+		.chat_box{
+			position:fixed;
+			right:20px;
+			bottom:0px;
+			width:250px;
+			display: none;
+		}
+		.chat_body{
+			background:#fcfcfc;
+			height:400px;
+			padding:5px 0px;
+			border-bottom: 1px solid #e8e9ea;
+			border-left: 1px solid #e8e9ea;
+			border-right: 1px solid #e8e9ea;
+			overflow: auto;
+		}
+
+		.search_input{
+			width:250px;
+			min-height: 30px;
+			border: 1px solid white;
+			border-top:1px solid #DDDDDD;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box; 
+			bottom: 0;
+			position: fixed;
+		}
+
+		.chat_head{
+			background:#cbfffa;
+			padding:15px;
+			font-weight:bold;
+			cursor:pointer;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.close{
+			float:right;
+			cursor:pointer;
+		}
+		.minimize{
+			float:right;
+			cursor:pointer;
+			padding-right:5px;
+			
+		}
+
+		.user{
+			position:relative;
+			padding:10px 30px;
+		}
+		.user:hover{
+			background:#f8f8f8;
+			cursor:pointer;
+
+		}
+		.user:before{
+			content:'';
+			position:absolute;
+			background:#2ecc71;
+			height:10px;
+			width:10px;
+			left:10px;
+			top:15px;
+			border-radius:6px;
+		}
+
+		.msg_head{
+			background:#FF78BB;
+			color:white;
+			padding:15px;
+			font-weight:bold;
+			cursor:pointer;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.msg_box{
+			background:white;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.msg_body{
+			background:#fcfcfc;
+			height:200px;
+			font-size:12px;
+			padding:15px;
+			overflow:auto;
+			overflow-x: hidden;
+		}
+
+		.msg_input{
+			width:70%;
+			border:1px solid #bab0b5;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box;
+		}
+
+		.sendBtn {
+			height: 35px;
+			width: 25%;
+			color: #ff3f95;
+			background-color: transparent;
+			outline: none;
+			border-radius: 20px;
+			font-size: 70%;
+			border: 1.5px solid #ff3f95;
+		}
+
+		.msg_a{
+			position:relative;
+			background:#FDE4CE;
+			padding:10px;
+			min-height:10px;
+			margin-bottom:5px;
+			margin-right:10px;
+			border-radius:5px;
+		}
+		.msg_a:before{
+			content:"";
+			position:absolute;
+			width:0px;
+			height:0px;
+			border: 10px solid;
+			border-color: transparent #FDE4CE transparent transparent;
+			left:-20px;
+			top:7px;
+		}
+
+
+		.msg_b{
+			background:#EEF2E7;
+			padding:10px;
+			min-height:15px;
+			margin-bottom:5px;
+			position:relative;
+			margin-left:10px;
+			border-radius:5px;
+			word-wrap: break-word;
+		}
+		.msg_b:after{
+			content:"";
+			position:absolute;
+			width:0px;
+			height:0px;
+			border: 10px solid;
+			border-color: transparent transparent transparent #EEF2E7;
+			right:-20px;
+			top:7px;
+		}
+
+		/* The Modal (background) */
+		.modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			padding-top: 100px; /* Location of the box */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		.modal-content {
+			margin: auto;
+			width: 30%;
+		}
+
+		.close {
+			color: #aaaaaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: #000;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		
+		
+		
+		#comment-user{
+			width: 70px;
+			height: 70px;
+			margin-top: 10px;
+			margin-left: 10px;
+		}
+		.comment-post-card{
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			transition: 0.3s;
+			width: 80%;
+			background-color: white;
+			border-radius: 5px;
+			margin: 0.5cm 0cm 0.10cm 0cm;
+			margin-top: 5px;
+			margin-left: 35px;
+			height: 140%;
+		}
+		
+		button, paper-button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 10px 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 15px 10px;
+			cursor: pointer;
+		}
+		
+		button:hover, paper-button:hover{
+			background-color: #6a7eed;
+		}
+		
+		.recommended{
+			background-color: #cbfffa;
+			margin: -15px;
+			width: 105%;
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+		}
+		
+		h2{
+			margin: 10px 10px;;
+		}
+		
+		.cat{
+			margin: -5px 10px;
+			padding: 0px;
+			color: black;
+			background-color: #cbfffa;
+			text-align: left;
+		}
+		
+		.cat:hover{
+			font-weight: bold;
+		}
+		
+		.recTxt{
+			color: black;
+			font-weight: bold;
+			margin: -10px -5px;
+			padding: 0px;
+			background-color: #cbfffa;
+		}
+		
+		.recTxt:hover{
+			text-color: blue;
+		}
+		
+		.postBox{
+			border-radius: 5px;
+			border: 0.5px solid gray;
+			font-size: 14px;
+			padding: 10px 15px;
+			margin: 5px 10px;
+			width: 88%;
+			height: 80%;
+			word-wrap: break-word;
+			rows: 4;
+		}
+		
+		#search {
+			width: 70%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: left;
+			border-radius: 10px;
+		}
+		
+		.label{
+			align: center;
+		}
+		
+		.recent{
+			width: 100%;
+			margin: 0px 0px;
+			background-color: #cbfffa;
+			color: black;
+		}
+    </style>
+    <div class = "header">
+			<div class = "nav">
+				<a href = "#"><img class = "logo" src ="images/logo.png" title = "let's uzap" /></a>
+				<paper-input label = "Search..." id = "search" ></paper-input>
+				<div class="component">
+					<a name="adminedit" href="/adminedit"><paper-icon-button src="images/edit.png" title="Edit"></paper-icon-button></a>
+					<a name="dashboard" href="/dashboard"><paper-icon-button src="images/home.png" title="Home"></paper-icon-button></a>
+					<paper-icon-button src="images/notification.png" title="Notification"></paper-icon-button></a>
+					<a name="user-profile" href="/user-profile"><paper-icon-button src="images/_tab.png" title="Profile"></paper-icon-button></a>
+					<paper-icon-button src="images/logout.png" title="Logout" on-click="logout"></paper-icon-button>
+				</div>
+			</div>
+		</div>
+	</br>
+
+	<section id="content">
+		<div class="categories">
+			<h2>Categories</h2>	
+			<paper-button class="cat" id="Advice" on-click="advice">Advice</paper-button></br>
+			<paper-button class="cat" id="Arts" on-click="arts">Arts</paper-button></br>
+			<paper-button class="cat" id="Business" on-click="business">Business</paper-button></br>
+			<paper-button class="cat" id="Education" on-click="education">Education</paper-button></br>
+			<paper-button class="cat" id="Entertainment" on-click="entertainment">Entertainment</paper-button></br>
+			<paper-button class="cat" id="Horror" on-click="horror">Horror</paper-button></br>
+			<paper-button class="cat" id="Lifestyle" on-click="lifestyle">Lifestyle</paper-button></br>
+			<paper-button class="cat" id="News" on-click="news">News</paper-button></br>
+			<paper-button class="cat" id="Science" on-click="science">Science</paper-button></br>
+			<paper-button class="cat" id="Sports" on-click="sports">Sports</paper-button></br>
+		</div>		
+	</section>
+
+	<section id="middle">
+		
+		<div class = "comment-card">
+				<div class = "comment-card-details">
+					<img id = "comment-user" src = "images/boy.svg" />
+					<iron-label>@{{username}}</iron-label>
+				</div>
+				<div class = "comment-post-card">
+					<label style="margin: 25px 10px; color:red"> Choose a Category: </label>
+					<paper-radio-group id="category" aria-labelledby="label" selected="{{category}}">
+							<paper-radio-button name="Advice">Advice</paper-radio-button>
+							<paper-radio-button name="Arts">Arts</paper-radio-button>
+							<paper-radio-button name="Business">Business</paper-radio-button>
+							<paper-radio-button name="Education">Education</paper-radio-button>
+							<paper-radio-button name="Entertainment">Entertainment</paper-radio-button>
+							<paper-radio-button name="Horror">Horror</paper-radio-button>
+							<paper-radio-button name="Lifestyle">Lifestyle</paper-radio-button>
+							<paper-radio-button name="News">News</paper-radio-button>
+							<paper-radio-button name="Science">Science</paper-radio-button>
+							<paper-radio-button name="Sports">Sports</paper-radio-button>
+					</paper-radio-group>
+					</br></br>
+					<label style="margin: 5px 10px; color:red"> Create a Topic: </label>
+					<paper-textarea label = "What do you want to talk about?" id = "comment" class = "postBox" value="{{post}}"></paper-textarea>
+					<paper-button toggles raised class="green" id = "btncmnt" on-click="postBtn"> Post </paper-button>
+				</div>
+		</div>
+		</br>
+		<paper-button class="recent" on-click="recent">Recent Topics</paper-button> </br></br>
+												
+	</section>	
+
+	<sidebar id="sidebar">
+		<h2>Trending</h2>
+		<br>															
+			
+			
+			<div class="chat_box">
+			<div class="chat_head">Chat (20)</div>
+			<div class="chat_body">
+			<div class="user" onclick = "openModal()"> <b> Krishna Teja</b></div>
+			<div class="user" onclick = "openModal()"> <b> Alexander Malcolm</b></div>
+			<div class="user" onclick = "openModal()"> <b> Dean Winchester</b></div>
+			<div class="user" onclick = "openModal()"> <b> Karla Smith</b></div>
+			<div class="user" onclick = "openModal()"> <b> Noelle Meinhardt</b></div>
+			<div class="user" onclick = "openModal()"> <b> Luke Casseus</b></div>
+			</br>
+			<b><label>Recent</label></b>
+			<div class="user" onclick = "openModal()"> Sarah Livsey</div>
+			<div class="user" onclick = "openModal()"> Francis Krouse</div>
+			<input type="text" class="search_input" placeholder="Search"></input>
+			</div>
+	
+  </div>
+
+<div id="msgModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+	<div class="msg_box" style="right:290px">
+    
+    	<div class="msg_head">Chat
+        <div class="close">&times;</div>
+        </div>
+        
+          <div class="msg_body">
+              <div class="msg_a">message a</div>
+              <div class="msg_b">message b</div>
+              <div class="msg_a">message c</div>	
+              <div class="msg_push"></div>
+          </div> <!--msg_body-->
+          
+          <textarea class="msg_input" id="msg_input" rows="2"></textarea>
+		  <button class= "sendBtn" id = "sendMsg">Send</button>
+	</div>
+    
+  </div>
+  
+</div>
+			
+	</sidebar>
+	
+
+
+	</body>
+	<footer>
+		<center><br><br>
+		<div id="footer_text">
+			This product is developed by G6.<br>
+			G6 2017
+		</div>
+		</center>
+	</footer>
+	
+	<iron-ajax
+		id = "dbCollectionPost"
+		url = "http://127.0.0.1:8080/db/posts"
+		params = '{"desc":"posts collection"}'
+		method ="PUT"
+		handle-as = "json"
+		on-response = "onSuccessCreate"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbQuery"
+		url = "http://127.0.0.1:8080/db/posts"
+		method = "GET"
+		handle-as = "json"
+		on-response = "onReceivedDB"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbInsertNew1"
+		url = "http://127.0.0.1:8080/db/posts"
+		body = '[{"post":"{{post}}", "category":"{{category}}", "nature":"POST", "createdBy":"{{username}}", "createdFor":"null", "comments":"0", "likes":"0", "dislikes":"0", "dateCreated":"{{date}}"}]'
+		method = "POST"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "onSuccessInsert"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<!--update
+	<iron-ajax
+		id = "dbQue"
+		url = "http://127.0.0.1:8080/db/posts?filter={'_id':{'$oid':'5a114be8847fb1274479ef8c'}}"
+		body='{"post_id":"0", "category":"Advice"}'
+		method = "PATCH"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response="onSuccess"
+		debounce-duration="300">
+	</iron-ajax>
+	-->
+	
+	<iron-ajax
+		id = "dbType"
+		url = "http://127.0.0.1:8080/db/users?filter={'username':'{{username}}'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceivedType"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbTrending"
+		url = "http://127.0.0.1:8080/db/posts?filter={%27nature%27:%27POST%27}&sort={%27comments%27:-1}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceivedTrending"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbFollow"
+		url = "http://127.0.0.1:8080/db/follow?filter={'followedBy':'{{username}}'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceivedFollow"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbQueryTimeline"
+		url = "http://127.0.0.1:8080/db/posts?filter={'nature':'POST'}"
+		method = "GET"
+		handle-as = "json"
+		on-response = "onReceivedTimeline"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<div id="results" style="display:none;">fajifk</div>
+	<div id="trending" style="display:none;">fhdjk</div>
+	<div id="timeline" style="display:none;">fhdjk</div>
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    class MyDashboard extends Polymer.Element {
+      static get is() { return 'my-dashboard'; }
+	  
+		static get properties() {
+			return {
+			  username: {type:String},
+			  category: {type: String},
+			  post: {type: String},
+			  date: {type: Date},
+			  name: {type:String},
+			  gender: {type:String},
+			  dateNow: {type:Date},
+			  postNum: {type:Number},
+			  postArr: {type:Array},
+			  userArr: {type:Array},
+			  dateArr: {type:Array},
+			  numArr: {type:Array},
+			  userPost: {type:String},
+			  counter: {type: Number}		//returns how many posts will be show in recent activities
+			}
+		}
+		
+		ready(){
+			this.username = localStorage.getItem("username");
+			this.date = new Date();
+			super.ready();
+			this.$.dbQuery.generateRequest();
+			this.$.dbType.generateRequest();
+			this.$.dbTrending.generateRequest();
+			this.$.dbFollow.generateRequest();
+		}
+		
+		onSuccessCreate(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			console.log("Success Insert: "+e.detail.response);
+			this.$.results.innerHTML = response + "\n";
+		}
+		
+		onSuccess(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			console.log("Success Insert: "+e.detail.response);
+			this.$.results.innerHTML = response + "\n";
+		}
+		
+		onReceivedFollow(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			console.log("Success Insert: "+e.detail.response);
+			var temp = response;
+			var start, end, person;
+			var responseIndex = response.search('_returned":')+12;
+			var use = response.substr(responseIndex);
+			var ctr = use.substring(0, use.indexOf("}")-1);
+			
+			var followArr = [];
+			for (var i=0; i<ctr; i++){
+				start = temp.indexOf('username')+12;
+				temp = temp.substr(start);
+				end = temp.indexOf('followedBy')-7;
+				person = temp.slice(0, end);
+				followArr.push(person);
+			}
+			
+			var temp=this.username;
+			for (var i=0; i<ctr; i++){
+				temp = temp +"@"+ followArr[i];
+			}
+			this.$.timeline.innerHTML = temp;
+		}
+		
+		recent(){
+			this.$.dbQueryTimeline.generateRequest();
+		}
+		
+		onReceivedTimeline(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			var postTemp = response;
+			var ind = 0;
+			var end = 0;
+			var question = "";
+			var tempArr = [];
+			var responseIndex = response.search('_returned":')+12;
+			var use = response.substr(responseIndex);
+			var ctr = use.substring(0, use.indexOf("}")-1);
+			for (var i=0; i<ctr; i++){
+				ind = postTemp.search('"post"')+9;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);
+				ind = postTemp.search('"category"')+13;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('"'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);
+			}
+			this.postArr = tempArr;
+			
+			ind = 0;
+			end = 0;
+			question = "";
+			tempArr = [];
+			postTemp = response;
+			for (var i=0; i<ctr; i++){
+				ind = postTemp.search('"createdBy"')+14;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);
+			}
+			this.userArr = tempArr;
+			
+			ind = 0;
+			end = 0;
+			question = "";
+			tempArr = [];
+			postTemp = response;
+			for (i=0; i<ctr; i++){
+				ind = postTemp.search('"dateCreated"')+19;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search(' GMT'); //end of question
+				question = postTemp.substr(0, end); //question
+				//alert(question);
+				tempArr.push(question);
+			}
+			
+			this.dateArr = tempArr;
+			this.cards(ctr, this.postArr, this.userArr, this.dateArr);
+		}
+		
+		cards(ctr, postArr, userArr, dateArr){
+			var j=0;
+			var div="";
+			var div2="";
+			var img="";
+			var h3="";
+			var h4="";
+			var aTag="";
+			var p="";
+			var div3="";
+			var badge="";
+			var btn="";
+			var btn2="";
+			var span="";
+			var rad="";
+			for (var i=0; i<ctr; i++){
+				if (this.$.timeline.innerHTML.includes(userArr[i])){
+					div = document.createElement("div");
+				div.className = "card";
+				div.id = "card";
+				this.$.middle.appendChild(div);
+				
+				div2 = document.createElement("div");
+				div2.className = "card-details";
+				div2.id = "card-details";
+				div.appendChild(div2);
+				
+				img = document.createElement("img");
+				img.id = "user";
+				img.src = "images/boy.svg";
+				div2.appendChild(img);
+				
+				h3 = document.createElement("h3");
+				//h3.onclick = this.getPost;
+				h3.className= "carduser";
+				h3.innerHTML = "@" + userArr[i];			//username
+				div2.appendChild(h3);
+				
+				h4 = document.createElement("h4");
+				h4.innerHTML = dateArr[i];
+				h4.className="card-datetime";
+				div2.appendChild(h4);
+				
+				div2 = document.createElement("div");
+				div2.className = "post-card";
+				div.appendChild(div2);
+				
+				p = document.createElement("paper-button");		//post
+				//span="title"+[k];
+				//p.setAttribute("id", span);
+				p.className="p-title";
+				p.innerHTML = postArr[j];
+				p.id = this.postArr[j]+h3.innerHTML+"@"+this.dateArr[i];
+				p.onclick = this.getPost;
+				div2.appendChild(p);
+				
+				aTag = document.createElement("a");
+				aTag.name = "forumboard";
+				aTag.href = "/forumboard";
+				div2.appendChild(aTag);
+				
+				p = document.createElement("paper-button");			//category
+				p.id = postArr[j+1];
+				p.className="p-description";
+				p.innerHTML = postArr[j+1];
+				p.onclick = this.getCategory;
+				div2.appendChild(p);
+				
+				div3 = document.createElement("div");
+				div3.className="p-comment";
+				div3.tabindex = "0";
+				div2.appendChild(div3);
+				
+				/*span = document.createElement("span");     //yung Comment
+				span.innerHTML="Comment";
+				div3.appendChild(span);
+				
+				badge = document.createElement("paper-badge");
+				badge.label = this.numArr[j];
+				div3.appendChild(badge);
+				
+				span = document.createElement("span");
+				span.innerHTML = "<paper-icon-button class='p-wrong' id='delete' src='images/delete.png'></paper-icon-button>"
+				div2.appendChild(span);
+				
+				
+				btn2 = document.createElement("paper-icon-button");   //yung x icon
+				btn2.className = "p-wrong";
+				btn2.setAttribute("id","num"+(j+1));
+				btn2.src = "images/valid.jpg";
+				btn2.alt = "inbox";
+				btn2.disabled=true;
+				div2.appendChild(btn2);
+				
+				badge = document.createElement("paper-badge");
+				badge.for= "num"+(j+1);
+				badge.label = this.numArr[j+1];
+				div2.appendChild(badge);
+				
+				btn = document.createElement("paper-icon-button");    //yung check icon
+				btn.className = "p-check";
+				btn.setAttribute("id","num"+(j+2));
+				btn.src = "images/invalid.png";
+				btn.alt = "inbox";
+				btn.disabled=true;
+				div2.appendChild(btn);
+				
+				badge = document.createElement("paper-badge");
+				badge.for= "num"+(j+2);
+				badge.label = this.numArr[j+2];
+				div2.appendChild(badge);*/
+				
+				}
+				
+				j = j+2;
+			}
+		}
+		
+		getPost(){
+			localStorage.setItem("postClicked", this.id);
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("user-profile"));
+			openLink = openLink + "forumboard";
+			window.open(openLink, "_self");
+		}
+		
+		getCategory(){
+			localStorage.setItem("categoryClicked", this.id);
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("user-profile"));
+			openLink = openLink + "forumboard";
+			window.open(openLink, "_self");
+		}
+		
+		onReceivedDB(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			var responseIndex = response.search('_returned":')+12;
+			var use = response.substr(responseIndex);
+			var ctr = use.substring(0, use.indexOf("}")-1);
+			this.counter = ctr;
+		}
+		
+		onReceivedType(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			var responseIndex = response.indexOf('type');
+			response = response.substring(responseIndex);
+			this.$.results.innerHTML = response + "\n";
+		}
+		
+		onReceivedTrending(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.trending.innerHTML = response;
+			var start, end, post, user, date;
+			var temp = response;
+			start = temp.search("returned")+11;
+			temp = temp.substr(start);
+			end = temp.search("}")-1;
+			var numTrend = temp.slice(0, end);
+			var trendArr = [];
+			var userArr = [];
+			var dateArr = [];
+			
+			if (numTrend>=10)
+				numTrend = 10;
+				
+			for (var i=0; i<numTrend; i++){
+				start = response.search('"post"')+9;
+				response = response.substr(start);
+				end = response.indexOf('",');
+				post = response.slice(0, end);	//post
+				trendArr.push(post);
+				
+				start = response.search('"createdBy"')+14;
+				response = response.substr(start);
+				end = response.search("createdFor")-7;
+				user = response.slice(0, end);	//creator of post
+				userArr.push(user);
+				
+				start = response.search("dateCreated")+19;
+				response = response.substr(start);
+				end = response.search(' GMT');
+				date = response.slice(0, end);
+				dateArr.push(date);
+			}
+			
+			//to create the buttons for trending
+			var btn, br;
+			for (var i=0; i<numTrend; i++){
+				btn = document.createElement("paper-button");
+				btn.innerHTML = trendArr[i];
+				btn.id = trendArr[i] + "@" + userArr[i] + "@" + dateArr[i];
+				btn.className = "recTxt";
+				btn.style = "text-align:left";
+				btn.onclick = this.trendForum;
+				this.$.sidebar.appendChild(btn);
+				
+				br = document.createElement("br");
+				this.$.sidebar.appendChild(br);
+				br = document.createElement("br");
+				this.$.sidebar.appendChild(br);
+			}
+			
+		}
+		
+		trendForum(){
+			localStorage.setItem("postClicked", this.id);
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "forumboard";
+			window.open(openLink, "_self");
+			
+		}
+		
+		advice(){
+			localStorage.setItem("categoryClicked","Advice");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  arts(){
+			localStorage.setItem("categoryClicked","Arts");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  business(){
+			localStorage.setItem("categoryClicked","Business");
+			alert(localStorage.getItem("categoryClicked"));
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  education(){
+			localStorage.setItem("categoryClicked","Education");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  entertainment(){
+			localStorage.setItem("categoryClicked","Entertainment");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  horror(){
+			localStorage.setItem("categoryClicked","Horror");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  lifestyle(){
+			localStorage.setItem("categoryClicked","Lifestyle");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  news(){
+			localStorage.setItem("categoryClicked","News");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  sports(){
+			localStorage.setItem("categoryClicked","Sports");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		  
+		  science(){
+			localStorage.setItem("categoryClicked","Science");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "topic-board";
+			window.open(openLink, "_self");
+		  }
+		
+		postBtn(){
+			//this.$.dbCollectionPost.generateRequest();
+			if (this.category==""){
+				alert("Please select CATEGORY.");
+			}
+			else if (this.post=="" || this.post==" "){
+				alert("Please write POST.");
+			}
+			else{
+				this.$.dbInsertNew1.generateRequest();
+				this.category="";
+				this.post="";
+				alert("Posted! ;)");
+			}
+		}	
+		
+		
+		
+		logout(){
+			localStorage.removeItem("username");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "home";
+			window.open(openLink, "_self");
+		}
+	} 
+
+	window.customElements.define(MyDashboard.is, MyDashboard);
+  </script>
+</dom-module>
+
+

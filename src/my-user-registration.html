@@ -1,0 +1,415 @@
+<!-- imports -->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<dom-module id="my-user-registration">
+	<template>
+		<style>
+		:host {
+			display: block;
+			padding: 16px;
+			background: #003399;
+		}
+		
+		.nav {
+				width: 100%;
+				height: 60px;
+				justify-content: flex-start;
+				margin: 4px 0px;
+				background-color: #66ccff; /*light blue*/
+				display: flex;
+				
+			}
+			
+			.header {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+			}
+			
+			.logo {
+				width: 80px;
+				height: 70px;
+				
+			}
+			
+			.inputSearch {
+				width: 50%;
+				height: 50px;
+				box-sizing: border-box;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				font-size: 15px;
+				background-color: white;
+				background-image: url('images/search.png');
+				background-size: 25px 25px;
+				background-position: 10px 11px; 
+				background-repeat: no-repeat;
+				padding: 12px 20px 12px 40px;
+				
+				margin-top: 4px;
+			}
+			
+			.component {
+				width: 45%;
+				height: 50px;
+				margin-top: 4px;
+				display: flex;
+				justify-content: flex-end;
+			}
+			
+			.component a:hover {
+				background-color: #f49ac7;
+			}
+			.material-icons{
+				font-size: 45px;
+				margin-top: 4px;
+				color: black;
+			}
+			
+			.div-reg{
+				background-color: #66ccff;
+				display: flex;
+				flex-direction: column;
+			}
+			
+			.div-step{
+				background-color: #cbfffa;
+				margin: 10px 10px;
+			}
+			
+			.div-name{
+				display: flex;
+				margin-bottom: 15px;
+			}
+			
+			.div-photo{
+				display: flex;
+				width: 50%;
+				margin: 4px 10px;
+			}
+			
+			.div-photo1{
+				width: 30%;
+			}	
+			
+			.profile{
+				display: block;
+				margin: auto;
+			}
+			
+			.div-photo2{
+				width: 120px;
+			}	
+			
+			.name{
+				width: 20%;
+				margin: 4px -10px;
+				border-left: none;
+				border-top: none;
+				border-right: none;
+				border-bottom-color: #555;
+				font-size: 14px;
+				padding: 10px 15px;
+			}
+			
+			.label{
+				width: 13%;
+				margin: 4px 10px;
+				padding: 10px 15px;
+			}
+			
+			.name: focus{
+				border: 3px solid red;
+			}
+			
+			.password-img{
+				width: 20px;
+				height: 20px;
+				cursor: pointer;
+				margin-top: 10px;
+			}
+			
+			.username-img{
+				width: 20px;
+				height: 20px;
+				margin-top: 10px;
+			}
+			
+			.inputfile {
+				width: 0.1px;
+				height: 0.1px;
+				opacity: 0;
+				overflow: hidden;
+				position: absolute;
+				z-index: -1;
+			}
+			
+			label{
+				padding: 4px 10px;
+			}
+			.inputfile + label {
+				color: white;
+				background-color: #3f51b5;
+				display: inline-block;
+			}
+
+			.inputfile:focus + label,
+			.inputfile + label:hover {
+				background-color: #5c6bc0;
+				cursor: pointer;
+			}
+			
+			.photoBtn{
+				padding: 4px 18px;
+				color: white;
+				background-color: #3f51b5;
+				display: inline-block;
+				margin-bottom: 10px;
+			}
+			
+			.photoBtn:hover{
+				background-color: #5c6bc0;
+				cursor: pointer;
+			}
+			
+			.submit{
+				width: 16%;
+				height: 5%;
+				background-color: #FF78BB;
+				font-weight: bold;
+				margin-bottom: 10px;
+				margin-left: 40px;
+				word-wrap: break-word;
+			}
+			
+			.submit:hover{
+				background-color: #5c6bc0;
+				cursor: pointer;
+			}
+			
+			h4{
+				margin: 30px 20px;
+			}
+			
+			.searchss{
+				margin-top:-5px;
+				margin-left: 20px;
+				width: 50%;
+				box-sizing: border-box;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				font-size: 15px;
+				background-color: white;
+				padding-top: -10px;
+			}
+			#search {
+				width: 70%;
+				border: 2px solid #ccc;
+				background-color: white;
+				float: left;
+				border-radius: 10px;
+			}
+		</style>
+		</style>
+		<!-- elements -->
+		<div class = "header">
+			<div class = "nav">
+				<a href = "#"><img class = "logo" src ="images/logo.png" title = "let's uzap" /></a>
+				<paper-input label = "Search..." id = "search" value="{{search}}"></paper-input>
+				<!--<input type="text" id="search" class="inputSearch" placeholder="Search...">-->
+			</div>
+			<h2><font color="white">Create New Account </font></h2>
+			<form>
+			<div class="div-reg">
+				<div class="div-step">
+					<p style="margin-left:15px; color:red;">* required</p>
+					<h4>Step 1: Personal Information</h4>
+					<div class="div-name">
+						<label class="label">Name<font color="red">*</font>: </label>
+						<paper-input id="first_name" value="{{first}}" placeholder="First"></paper-input> &nbsp &nbsp &nbsp &nbsp
+						<paper-input id="last_name" value="{{last}}" placeholder="Last"></paper-input>
+					</div>
+					</br>
+					<div class="div-name">
+						<label class="label">Email<font color="red">*</font>: </label>
+						<paper-input id="email" value="{{email}}"></paper-input>
+					</div>
+					<div class="div-name">
+						<label class="label">Gender<font color="red">*</font>: </label>
+						<paper-radio-group id="gender" aria-labelledby="label" selected="{{gender}}">
+							<paper-radio-button name="F">Female</paper-radio-button>
+							<paper-radio-button name="M">Male</paper-radio-button>
+						</paper-radio-group>
+					</div>
+				</div>
+				<div class="div-step">
+					<h4>Step 2: Account Information</h4>
+					<div class="div-name">
+						<label class="label">Username<font color="red">*</font>:(at least 4 characters and does not include '@')</label>
+						<paper-input id="username" value="{{username}}"></paper-input>
+						<!--<img src="images/invalid.png" class="username-img" id="usernameValid">-->
+					</div>
+					</br>
+					<div class="div-name">
+						<label class="label">Password<font color="red">*</font>: (at least 8 characters)</label>
+						<paper-input type="password" id="password" value="{{password}}"></paper-input>
+					</div>
+				</div>
+				<div class="div-step">
+					<h4>Step 3: Submit and Let's Uzap!</h4>
+						<paper-button raised class="submit" on-click="createAccount">Create Account </paper-button>
+				</div>
+			</div>
+			</form>
+		</div>
+		<iron-ajax
+			id = "dbAjaxPost"
+			url = "http://127.0.0.1:8080/db"
+			params = '{"desc":"this is db created for Let's Uzap"}'
+			method ="PUT"
+			handle-as = "json"
+			on-response = "onSuccessCreate"
+			debounce-duration = "300">
+		</iron-ajax>
+		
+		<iron-ajax
+			id = "dbCollectionPost"
+			url = "http://127.0.0.1:8080/db/users"
+			params = '{"desc":"this is users collection"}'
+			method ="PUT"
+			handle-as = "json"
+			on-response = "onSuccessCreate"
+			debounce-duration = "300">
+		</iron-ajax>
+		
+		<iron-ajax
+			id = "dbInsertNew1"
+			url = "http://127.0.0.1:8080/db/users"
+			body = '[{"username":"{{username}}", "firstName":"{{first}}", "lastName":"{{last}}", "email":"{{email}}", "password":"{{password}}", "gender":"{{gender}}", "type":"regular", "status":"ACTIVE"}]'
+			method = "POST"
+			handle-as = "json"
+			content-type = "application/json"
+			on-response = "onSuccessInsert"
+			debounce-duration="300">
+		</iron-ajax>
+		
+		<iron-ajax
+			id = "dbQuery"
+			url = "http://127.0.0.1:8080/db/users?keys={%27username%27:1}"
+			method = "GET"
+			handle-as = "json"
+			on-response = "onReceivedDB"
+			debounce-duration = "300">
+		</iron-ajax>
+	
+	<div id="results" style="display:none;">jak</div>
+	</template>
+	<script>
+	class MyUserRegistration extends Polymer.Element {
+      static get is() { return 'my-user-registration'; }
+	  
+	  static get properties() {
+			return {
+			  search: {type: String},
+			  first: {type: String},
+			  last: {type: String},
+			  email: {type:String},
+			  username: {type:String},
+			  password: {type:String},
+			  gender: {type:String}
+			}
+		}
+		
+		ready(){
+			super.ready();
+			this.$.dbQuery.generateRequest();
+		}
+		
+		onSuccessCreate(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			console.log("Success Insert: "+e.detail.response);
+			this.$.results.innerHTML = response + "\n";
+		}
+		
+		onReceivedDB(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.results.innerHTML = response + "\n";
+			
+		}
+		
+		createAccount(){
+			//http://127.0.0.1:8080/db/users for users
+			//this.$.dbAjaxPost.generateRequest();
+			//this.$.dbCollectionPost.generateRequest();
+			//if (this.username.length<4){
+			
+			if (this.first==null){
+				alert("Please input FIRST name.");
+			}
+			else if (this.last==null){
+				alert("Please input LAST name.");
+			}
+			else if (this.email==null){
+				alert("Please input EMAIL ADDRESS.");
+			}
+			else if (!this.email.includes("@")){
+				this.email="";
+				alert("Please input VALID EMAIL ADDRESS");
+			}	
+			else if (this.gender==null){
+				alert("Please select GENDER.");
+			}
+			else if (this.username==null || this.username.length<4){
+				alert("USERNAME must be at least 4 characters.");
+				this.username="";
+			}
+			else if (this.username.includes("@")){
+				this.username="";
+				alert("Please input VALID USERNAME");
+			}	
+			else if (this.password==null || this.password.length<8){
+				alert("PASSWORD must be at least 8 characters.");
+				this.password="";
+			}
+			else if (this.$.results.innerHTML.includes(this.username)){
+				alert("Username is already taken.");
+				this.username="";
+				this.password="";
+			}
+			else{
+				this.$.dbInsertNew1.generateRequest();
+				this.first="";
+				this.last="";
+				this.email="";
+				this.username="";
+				this.password="";
+				alert("Account created!");
+				var openLink = window.location.href;
+				openLink= openLink.toString();
+				openLink = openLink.substring(0, openLink.indexOf("user-registration"));
+				openLink = openLink + "home";
+				window.open(openLink, "_self");
+			}
+		}
+		
+		
+	  
+    }
+	
+    window.customElements.define(MyUserRegistration.is, MyUserRegistration);
+	</script>
+	<script>
+		
+	</script>
+</dom-module>
+
+

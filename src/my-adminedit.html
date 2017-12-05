@@ -1,0 +1,930 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-select/dist/paper-select.html">		
+<link rel="import" href="https://www.webcomponents.org/element/PolymerElements/paper-dropdown-menu">	
+<link rel="import" href="paper-dropdown-menu-icons.html">
+<link rel="import" href="paper-dropdown-menu-shared-styles.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<dom-module id="my-adminedit">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+			:host {
+			display: block;
+			padding: 16px;
+		}
+		
+		.nav {
+			width: 100%;
+			height: 60px;
+			justify-content: flex-start;
+			margin: 4px 0px;
+			background-color: #66ccff;
+			display: flex;
+			
+		}
+		
+		.header {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		
+		.logo {
+			width: 80px;
+			height: 70px;
+			
+		}
+		
+		.inputSearch {
+			width: 50%;
+			height: 50px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			font-size: 15px;
+			background-color: white;
+			background-image: url('images/search.png');
+			background-size: 25px 25px;
+			background-position: 10px 11px; 
+			background-repeat: no-repeat;
+			padding: 12px 20px 12px 40px;
+			margin-top: 4px;
+		}
+		
+		.component {
+			width: 45%;
+			height: 50px;
+			margin-top: 10px;
+			margin-right: 10px;
+			display: flex;
+			justify-content: flex-end;
+		}
+		
+		.component paper-icon-button:hover {
+			background-color: #f49ac7;
+		}
+		
+		.profile {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin-top: 20px;
+		}
+		
+		#pic {
+			max-width: 150px;
+			min-width: 150px;
+		}
+		#circle {
+			display: flex;
+			width: 10px;
+			height: 10px;
+			max-width: 10px;
+			min-width: 10px;
+			border-radius: 50px;
+			background: green;
+			margin-left: 5px;
+			margin-top: 6.5px;
+		}
+		.details{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		
+		}
+		.name {
+			display: flex;
+		}
+		
+		.uname {
+			display: flex;
+			margin-top: -15px;
+		}
+
+		.numposts{
+			margin-left: -200px;
+			margin-top: -1px;
+		}
+		.posts {
+			display: flex;
+			margin-left: -200px;
+			margin-top: -15px;
+		}
+		
+		.numlikes {
+			display: flex;
+			margin-left: 0px;
+			margin-top: -63px;
+		}
+		
+		.likes{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 0px;
+		}
+		
+		.numfollowers{
+			display: flex;
+			margin-left: 200px;
+			margin-top: -63px; 
+		}
+		
+		.followers{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 200px;
+		}
+		.hr{
+			background-color: white;
+		}
+		.style1{
+			border-top: 2px solid #000000;
+		}
+		.content button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		
+		.content button:hover{
+			background-color: #6a7eed;
+		}
+		.follow, .chat, .other{
+			float: right;
+		}
+		
+		.card{
+			display: flex;
+			background-color: #66ccff;
+			margin-left: -15px;
+			padding: 10px 10px;
+		}
+		
+		.comment-card {
+			display: flex;
+			background-color: #66ccff;
+			margin-left: -15px;
+			margin-top: -5px;
+			padding: 10px 10px;
+		}
+		
+		#user {
+			width: 70px;
+			height: 70px;
+			margin-top: 10px;
+			margin-left: 10px;
+		}
+
+		
+		.card h4{
+			margin-top: 20px;
+			
+		}
+		
+		.post-card {
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			transition: 0.3s;
+			width: 80%;
+			background-color: white;
+			border-radius: 5px;
+			margin: 0.5cm 0cm 0.10cm 0cm;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
+		
+		.p-title{
+			font-size: 20px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			margin-top: 35px;
+			margin-left: 20px;
+			margin-right: 20px;
+			width: 90%;
+			background-color: white;
+		}
+		
+		.p-description{
+			font-size: 14px;
+			color: black;
+			text-align: left;
+			margin-top: -10px;
+			margin-left: 20px;
+			width: 90%;
+			background-color: white;
+		}
+		
+		.p-comment{
+			font-size:15px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+			display: inline-block;
+			margin-top: 40px;
+		}
+		
+		.p-check, .p-wrong{
+			font-size:15px;
+			font-weight: bold;
+			color: black;
+			text-align: right;
+			display: inline-block;
+			float: right;
+			margin-top: 40px;
+		}
+		
+
+		#content {
+			width: 20%;
+			float: left;
+			padding: 5px 15px;
+			margin-top: -15px;
+			/* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); shadow ung malaki*/
+		}
+		.rec1{
+			/*box-shadow: 0px 8px 10px 0 rgba(0,0,0,0.2);*/
+			letter-spacing: 0px;
+			word-spacing: 0.5px;
+			background-color: #cbfffa;
+			font-size: 14px;
+			margin-bottom: 10px;
+			margin-top: 0;
+			margin-left: 10px;
+			
+		}
+		.categories{
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			letter-spacing: 4px;
+			word-spacing: 4px;	
+			background-color: #cbfffa;
+			margin-left: -15px;
+			margin-top: 10px;
+			width: 90%;
+			padding: 20px 20px;
+		}
+		footer {
+			clear: both;
+			padding: 0 15px;
+			width:100%;
+			float: center;
+			background: #003399;
+			height:100px;
+			margin-top: 10;	
+		}
+		#sidebar {
+			width: 18%;
+			float: left;
+			background-color: #cbfffa;
+			height: 100%;
+			padding: 20px 20px;
+			padding-bottom: 10px;
+			padding-right: 10px;
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			
+		}
+		#middle {
+			width: 50%; /* Account for margins + border values */
+			float: left;
+			padding: 5px 15px;
+		}
+		.trend{
+			box-shadow: 0px 8px 10px 0 rgba(0,0,0,0.2);
+			letter-spacing: 0px;
+			word-spacing: 2px;
+			background-color: white;
+			font-size: 15px;
+			margin-bottom: 0px;
+			margin-top: 0;
+			
+		}
+
+		.logout {
+			padding: 50px 10px;
+			font-size: 30px;
+			font-weight: bold;
+			color: white;
+
+		}
+
+		.chat_box{
+			position:fixed;
+			right:20px;
+			bottom:0px;
+			width:250px;
+			display: none;
+		}
+		.chat_body{
+			background:#fcfcfc;
+			height:400px;
+			padding:5px 0px;
+			border-bottom: 1px solid #e8e9ea;
+			border-left: 1px solid #e8e9ea;
+			border-right: 1px solid #e8e9ea;
+			overflow: auto;
+		}
+
+		.search_input{
+			width:250px;
+			min-height: 30px;
+			border: 1px solid white;
+			border-top:1px solid #DDDDDD;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box; 
+			bottom: 0;
+			position: fixed;
+		}
+
+		.chat_head{
+			background:#cbfffa;
+			padding:15px;
+			font-weight:bold;
+			cursor:pointer;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.close{
+			float:right;
+			cursor:pointer;
+		}
+		.minimize{
+			float:right;
+			cursor:pointer;
+			padding-right:5px;
+			
+		}
+
+		.user{
+			position:relative;
+			padding:10px 30px;
+		}
+		.user:hover{
+			background:#f8f8f8;
+			cursor:pointer;
+
+		}
+		.user:before{
+			content:'';
+			position:absolute;
+			background:#2ecc71;
+			height:10px;
+			width:10px;
+			left:10px;
+			top:15px;
+			border-radius:6px;
+		}
+
+		.msg_head{
+			background:#FF78BB;
+			color:white;
+			padding:15px;
+			font-weight:bold;
+			cursor:pointer;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.msg_box{
+			background:white;
+			border-radius:5px 5px 0px 0px;
+		}
+
+		.msg_body{
+			background:#fcfcfc;
+			height:200px;
+			font-size:12px;
+			padding:15px;
+			overflow:auto;
+			overflow-x: hidden;
+		}
+
+		.msg_input{
+			width:70%;
+			border:1px solid #bab0b5;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box;
+		}
+
+		.sendBtn {
+			height: 35px;
+			width: 25%;
+			color: #ff3f95;
+			background-color: transparent;
+			outline: none;
+			border-radius: 20px;
+			font-size: 70%;
+			border: 1.5px solid #ff3f95;
+		}
+
+		.msg_a{
+			position:relative;
+			background:#FDE4CE;
+			padding:10px;
+			min-height:10px;
+			margin-bottom:5px;
+			margin-right:10px;
+			border-radius:5px;
+		}
+		.msg_a:before{
+			content:"";
+			position:absolute;
+			width:0px;
+			height:0px;
+			border: 10px solid;
+			border-color: transparent #FDE4CE transparent transparent;
+			left:-20px;
+			top:7px;
+		}
+
+
+		.msg_b{
+			background:#EEF2E7;
+			padding:10px;
+			min-height:15px;
+			margin-bottom:5px;
+			position:relative;
+			margin-left:10px;
+			border-radius:5px;
+			word-wrap: break-word;
+		}
+		.msg_b:after{
+			content:"";
+			position:absolute;
+			width:0px;
+			height:0px;
+			border: 10px solid;
+			border-color: transparent transparent transparent #EEF2E7;
+			right:-20px;
+			top:7px;
+		}
+
+		/* The Modal (background) */
+		.modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			padding-top: 100px; /* Location of the box */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		.modal-content {
+			margin: auto;
+			width: 30%;
+		}
+
+		.close {
+			color: #aaaaaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: #000;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		
+		
+		
+		#comment-user{
+			width: 70px;
+			height: 70px;
+			margin-top: 10px;
+			margin-left: 10px;
+		}
+		.comment-post-card{
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			transition: 0.3s;
+			width: 80%;
+			background-color: white;
+			border-radius: 5px;
+			margin: 0.5cm 0cm 0.10cm 0cm;
+			margin-top: 5px;
+			margin-left: 35px;
+			height: 140%;
+		}
+		
+		button, paper-button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 10px 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 15px 10px;
+			cursor: pointer;
+		}
+		
+		button:hover, paper-button:hover{
+			background-color: #6a7eed;
+		}
+		
+		.recommended{
+			background-color: #cbfffa;
+			margin: -15px;
+			width: 105%;
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+		}
+		
+		h2{
+			margin: 10px 10px;;
+		}
+		
+		.cat{
+			margin: -5px 10px;
+			padding: 0px;
+			color: black;
+			background-color: #cbfffa;
+			text-align: left;
+		}
+		
+		.cat:hover{
+			font-weight: bold;
+		}
+		
+		.recTxt{
+			color: black;
+			font-weight: bold;
+			margin: -10px -5px;
+			padding: 0px;
+			background-color: #cbfffa;
+		}
+		
+		.recTxt:hover{
+			text-color: blue;
+		}
+		
+		.postBox{
+			border-radius: 5px;
+			border: 0.5px solid gray;
+			font-size: 14px;
+			padding: 10px 15px;
+			margin: 5px 10px;
+			width: 88%;
+			height: 80%;
+			word-wrap: break-word;
+			rows: 4;
+		}
+		
+		#search {
+			width: 70%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: left;
+			border-radius: 10px;
+		}
+		
+		.label{
+			align: center;
+		}
+		
+		.recent{
+			width: 100%;
+			margin: 0px 0px;
+			background-color: #cbfffa;
+			color: black;
+		}
+		
+		.num{
+			text-align: center;
+			font-weight: bold;
+			font-size: 30px;
+			margin-left: 25px;
+			margin-right: 25px;
+		}
+		
+		#customers {
+			font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		#customers td, #customers th {
+			border: 1px solid #ddd;
+			padding: 8px;
+		}
+
+		#customers tr:nth-child(even){background-color: white;}
+
+		#customers tr:hover {background-color: #ddd;}
+
+		#customers th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			text-align: left;
+			background-color: #cbfffa;
+			color: black;
+		}
+    </style>
+
+ 	
+			<div class = "header">
+			<div class = "nav">
+				<a name="home" href = "/home"><img class = "logo" src ="images/logo.png" title = "let's uzap" /></a>
+				<paper-input label = "Search..." id = "search" ></paper-input>
+				<div class="component">
+					<a name="adminedit" href="/adminedit"><paper-icon-button src="images/edit.png" title="Edit"></paper-icon-button></a>
+					<a name="dashboard" href="/dashboard"><paper-icon-button src="images/home.png" title="Home"></paper-icon-button></a>
+					<paper-icon-button src="images/notification.png" title="Notification"></paper-icon-button></a>
+					<a name="user-profile" href="/user-profile"><paper-icon-button src="images/_tab.png" title="Profile"></paper-icon-button></a>
+					<paper-icon-button src="images/logout.png" title="Logout" on-click="logout"></paper-icon-button>
+				</div>
+			</div>
+		</div>
+	</br>
+
+	<section id="content">
+		<div class="categories">
+			<h3>Number of Users </h2>
+			<div><iron-label id="numUsers" class="num">1234</iron-label></div>
+		</div>		
+	</section>
+
+	<section id="middle">
+		<paper-button class="recent" on-click="recent">Reported Users</paper-button> </br></br>
+		<table id="customers">
+			<tr>
+				<th>Reported Username</th>
+				<th>Reported By: </th>
+				<th>Action</th>
+			</tr>
+		</table>
+		<br/>
+												
+	</section>	
+
+	<sidebar id="sidebar">
+			<h3>Number of Posts </h2>
+			<div><iron-label id="numPosts" class="num">1234</iron-label></div>
+		
+		<br>															
+			
+			
+			<div class="chat_box">
+			<div class="chat_head">Chat (20)</div>
+			<div class="chat_body">
+			<div class="user" onclick = "openModal()"> <b> Krishna Teja</b></div>
+			<div class="user" onclick = "openModal()"> <b> Alexander Malcolm</b></div>
+			<div class="user" onclick = "openModal()"> <b> Dean Winchester</b></div>
+			<div class="user" onclick = "openModal()"> <b> Karla Smith</b></div>
+			<div class="user" onclick = "openModal()"> <b> Noelle Meinhardt</b></div>
+			<div class="user" onclick = "openModal()"> <b> Luke Casseus</b></div>
+			</br>
+			<b><label>Recent</label></b>
+			<div class="user" onclick = "openModal()"> Sarah Livsey</div>
+			<div class="user" onclick = "openModal()"> Francis Krouse</div>
+			<input type="text" class="search_input" placeholder="Search"></input>
+			</div>
+	
+  </div>
+
+<div id="msgModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+	<div class="msg_box" style="right:290px">
+    
+    	<div class="msg_head">Chat
+        <div class="close">&times;</div>
+        </div>
+        
+          <div class="msg_body">
+              <div class="msg_a">message a</div>
+              <div class="msg_b">message b</div>
+              <div class="msg_a">message c</div>	
+              <div class="msg_push"></div>
+          </div> <!--msg_body-->
+          
+          <textarea class="msg_input" id="msg_input" rows="2"></textarea>
+		  <button class= "sendBtn" id = "sendMsg">Send</button>
+	</div>
+    
+  </div>
+  
+</div>
+			
+	</sidebar>
+	
+
+
+	</body>
+	<footer>
+		<center><br><br>
+		<div id="footer_text">
+			This product is developed by G6.<br>
+			G6 2017
+		</div>
+		</center>
+	</footer>
+	
+	<iron-ajax
+		id = "dbGetNumberOfUsers"
+		url = "http://127.0.0.1:8080/db/users"
+		method = "GET"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "getUsers"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbGetNumberOfPosts"
+		url = "http://127.0.0.1:8080/db/posts"
+		method = "GET"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "getPosts"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbCollectionBlock"
+		url = "http://127.0.0.1:8080/db/blockUsers"
+		params = '{"desc":"blocked users collection"}'
+		method ="PUT"
+		handle-as = "json"
+		on-response = "onSuccessCreate"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbGetReported"
+		url = "http://127.0.0.1:8080/db/blockUsers?filter={'status':'PENDING'}"
+		method = "GET"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "getReported"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbUserStatus"
+		url = "http://127.0.0.1:8080/db/blockUsers/{{blockID}}"
+		method = "PATCH"
+		body = "{'status':'BLOCKED'}"
+		handle-as = "json"
+		content-type = "application/json";
+		on-response = "onSuccess"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+  </template>
+	
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+     class MyAdminedit extends Polymer.Element {
+      static get is() { return 'my-adminedit'; }
+		
+		static get properties() {
+			return {
+			  privilege: {type:String},
+			  user: {type: String},
+			  blockID: {type:String}
+			  }
+		}
+		
+		ready(){
+			super.ready();	
+			this.$.dbGetNumberOfUsers.generateRequest();
+			this.$.dbGetNumberOfPosts.generateRequest();
+			this.$.dbGetReported.generateRequest();
+		}
+		
+		getUsers(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			//this.$.results.innerHTML = response + "\n";
+			var temp = response; // copy the result of the query
+			var start = temp.search("returned")+11;
+			var temp = temp.substr(start);
+			var end = temp.search("}")-1;
+			var numTrend = temp.slice(0, end);
+			this.numberOfUsers = numTrend;
+			this.$.numUsers.innerHTML = numTrend;
+		}
+		
+		getPosts(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			//this.$.results.innerHTML = response + "\n";
+			
+			var temp = response; // copy the result of the query
+			var start = temp.search("returned")+11;
+			var temp = temp.substr(start);
+			var end = temp.search("}")-1;
+			var numTrend = temp.slice(0, end);
+			this.$.numPosts.innerHTML = numTrend;
+		}
+		
+		getReported(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			temp = response;
+			var start = temp.search("returned")+11;
+			var temp = temp.substr(start);
+			var end = temp.search("}")-1;
+			var numTrend = temp.slice(0, end);
+			var question;
+			temp = response;
+			var tempArr = [];
+			for (var i=0; i<numTrend; i++){
+				start = temp.search('_id');
+				temp = temp.substring(start+21);
+				end = temp.substring(0, temp.indexOf('}')-5);
+				tempArr.push(end);
+				
+				start = temp.indexOf('username')+12;
+				temp = temp.substr(start);
+				end = temp.indexOf('filedBy')-7;
+				question = temp.slice(0, end);
+				tempArr.push(question);
+				
+				start = temp.indexOf('filedBy')+11;
+				temp = temp.substr(start);
+				end = temp.indexOf('status')-7;
+				question = temp.slice(0, end);
+				tempArr.push(question);
+			}
+			
+			var tr, td, btn;
+			var i=0;
+			var j=0;
+			while (i<numTrend){
+				tr = document.createElement("tr");
+				this.$.customers.appendChild(tr);
+				
+				td = document.createElement("td");
+				td.innerHTML = tempArr[j+1];
+				tr.appendChild(td);
+				
+				td = document.createElement("td");
+				td.innerHTML = tempArr[j+2];
+				tr.appendChild(td);
+				
+				td = document.createElement("td");
+				tr.appendChild(td);
+				
+				btn = document.createElement("paper-button");
+				btn.innerHTML = "Block";
+				btn.id = tempArr[j];
+				btn.onclick = this.getID;
+				td.appendChild(btn);
+				
+				i++;
+				j = j+3;
+			}
+		}
+		
+		getID(){
+			localStorage.setItem("id", this.id);
+		}
+		
+		blockUsers(){
+			this.blockID = localStorage.getItem("id");
+			alert(this.blockID);
+			this.$.dbUserStatus.generateRequest();
+			alert(this.blockID);
+		}
+		
+		logout(){
+			localStorage.removeItem("username");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("adminedit"));
+			openLink = openLink + "home";
+			window.open(openLink, "_self");
+		}
+	 }
+	 
+	 window.customElements.define(MyAdminedit.is, MyAdminedit);
+  </script>
+</dom-module>
+

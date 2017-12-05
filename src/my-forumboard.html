@@ -1,0 +1,1152 @@
+<!-- imports -->
+<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" href="facivon.ico">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">	
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">		
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">	
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+
+
+<dom-module id="my-forumboard">
+	<template>
+		<style>
+			:host {
+				display: block;
+				padding: 16px;
+				background: #003399;
+			}
+			
+			.nav {
+				width: 100%;
+				height: 60px;
+				justify-content: flex-start;
+				margin: 4px 0px;
+				background-color: #66ccff;
+				display: flex;
+				
+			}
+			
+			.header {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+			}
+			
+			.logo {
+				width: 80px;
+				height: 70px;
+				
+			}
+			
+			.inputSearch {
+				width: 50%;
+				height: 50px;
+				box-sizing: border-box;
+				border: 2px solid #ccc;
+				border-radius: 10px;
+				font-size: 15px;
+				background-color: white;
+				background-image: url('search.png');
+				background-size: 25px 25px;
+				background-position: 10px 11px; 
+				background-repeat: no-repeat;
+				padding: 12px 20px 12px 40px;
+				
+				margin-top: 4px;
+			}
+			
+			.component {
+				width: 45%;
+				height: 50px;
+				margin-top: 4px;
+				display: flex;
+				justify-content: flex-end;
+			}
+			
+			.component paper-icon-button:hover {
+				background-color: #93d7f9;
+			}
+			
+			.card{
+				display: flex;
+				background-color: #66ccff;
+			}
+			
+			
+			#user {
+				width: 70px;
+				height: 70px;
+				margin-top: 10px;
+				margin-left: 30px;
+			}
+
+			.card h3{
+				margin-left: 10px;
+			}
+			.card h4{
+				margin-top: 20px;
+				margin-left: 10px;
+			}
+			
+			.post-card {
+				box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+				width: 70%;
+				background-color: white;
+				border-radius: 5px;
+				margin: 0.5cm 0cm 0.10cm 0cm;
+				margin-top: 5px;
+				margin-left: 10px;
+			}
+			
+			.reply-card{
+				display: flex;
+				background-color: #66ccff;
+			}
+			
+			.reply-user {
+				width: 70px;
+				height: 70px;
+				margin-top: 10px;
+				margin-left: 250px;
+				cursor: pointer;
+			}
+			
+			.reply-card h3, .reply-card h4 {
+				margin-top: 30px;
+				margin-left: 230px;
+			}
+			
+			.reply-post-card {
+				box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+				width: 51%;
+				background-color: white;
+				border-radius: 5px;
+				margin: 0.5cm 0cm 0.10cm 0cm;
+				margin-top: 10px;
+				margin-left: 30px;
+			}
+			
+			.reply-post{
+				display: flex;
+				background-color: pink;
+			}
+			
+			#post-user {
+				width: 70px;
+				height: 70px;
+				margin-top: 10px;
+				margin-left: 420px;
+			}
+			
+			.reply-post h3 {
+				margin-top: 30px;
+				margin-left: 420px;
+			}
+			
+			.reply-post h4 {
+				margin-top: 30px;
+				margin-left: 390px;
+			}
+			.see-reply-post {
+				box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+				width: 51%;
+				background-color: white;
+				border-radius: 5px;
+				margin: 0.5cm 0cm 0.10cm 0cm;
+				margin-top: 10px;
+				margin-left: 30px;
+			}
+			
+			.comment-card {
+				display: flex;
+				background-color: #66ccff;
+			}
+			
+			
+			#comment-user{
+				width: 70px;
+				height: 70px;
+				margin-top: 10px;
+				margin-left: 250px;
+			}
+			.comment-post-card{
+				box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+				width: 51%;
+				height: 90%;
+				background-color: white;
+				border-radius: 8px;
+				margin: 0.5cm 0cm 0.10cm 0cm;
+				margin-top: 5px;
+				margin-left: 77px;
+			}
+			.comment-card1 {
+				display: flex;
+				background-color: #66ccff;
+			}
+
+			#comment-user1{
+				width: 70px;
+				height: 70px;
+				margin-top: 10px;
+				margin-left: 420px;
+			}
+			.comment-post-card1{
+				box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+				width: 51%;
+				background-color: white;
+				border-radius: 5px;
+				margin: 0.5cm 0cm 0.10cm 0cm;
+				margin-top: 5px;
+				margin-left: 55px;
+			}
+			.p-title{
+				font-size: 20px;
+				font-weight: bold;
+				color: black;
+				text-align: left;
+			}
+			
+			.p-description {
+				font-size: 15px;
+				color: black;
+				text-align: left;
+			}
+			
+			.p-comment{
+				font-size:15px;
+				font-weight: bold;
+				color: black;
+				text-align: left;
+				margin-top: 40px;
+				display: inline-block;
+				margin-left: 30px;
+				margin-right: 30px;
+			}
+			
+			 .p-comment > paper-badge {
+				--paper-badge-margin-left: 20px;
+				--paper-badge-margin-bottom: 0px;
+			}
+			
+			.p-check, .p-wrong{
+				font-size:15px;
+				font-weight: bold;
+				color: black;
+				text-align: right;
+				display: inline-block;
+				float: right;
+				margin-top: 40px;
+			}
+			paper-button{
+				background-color: #3f51b5;
+				border: none;
+				color: white;
+				padding: 10px 15px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				font-weight: bold;
+				margin: 15px 10px;
+				cursor: pointer;
+			}
+			
+			paper-button:hover{
+				background-color: #6a7eed;
+			}
+			.logout {
+				padding: 50px 10px;
+				font-size: 30px;
+				font-weight: bold;
+				color: white;
+			}
+
+			.chat_box{
+				position:fixed;
+				right:20px;
+				bottom:0px;
+				width:250px;
+			}
+			.chat_body{
+				display: none;
+				background:#fcfcfc;
+				height:400px;
+				padding:5px 0px;
+				border-bottom: 1px solid #e8e9ea;
+				border-left: 1px solid #e8e9ea;
+				border-right: 1px solid #e8e9ea;
+				overflow: auto;
+			}
+
+			.search_input{
+				width:250px;
+				min-height: 30px;
+				border: 1px solid white;
+				border-top:1px solid #DDDDDD;
+				-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+				-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+				box-sizing: border-box; 
+				bottom: 0;
+				position: fixed;
+			}
+
+			.chat_head{
+				display: none;
+				background:#FF78BB;
+				color:white;
+				padding:15px;
+				font-weight:bold;
+				cursor:pointer;
+				border-radius:5px 5px 0px 0px;
+			}
+
+			.close{
+				float:right;
+				cursor:pointer;
+			}
+			.minimize{
+				float:right;
+				cursor:pointer;
+				padding-right:5px;
+				
+			}
+
+			.user{
+				position:relative;
+				padding:10px 30px;
+			}
+			.user:hover{
+				background:#f8f8f8;
+				cursor:pointer;
+
+			}
+			.user:before{
+				content:'';
+				position:absolute;
+				background:#2ecc71;
+				height:10px;
+				width:10px;
+				left:10px;
+				top:15px;
+				border-radius:6px;
+			}
+
+			.msg_head{
+				background:#FF78BB;
+				color:white;
+				padding:15px;
+				font-weight:bold;
+				cursor:pointer;
+				border-radius:5px 5px 0px 0px;
+			}
+
+			.msg_box{
+				background:white;
+				border-radius:5px 5px 0px 0px;
+			}
+
+			.msg_body{
+				background:#fcfcfc;
+				height:200px;
+				font-size:12px;
+				padding:15px;
+				overflow:auto;
+				overflow-x: hidden;
+			}
+
+			.msg_input{
+				width:70%;
+				border:1px solid #bab0b5;
+				-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+				-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+				box-sizing: border-box;
+			}
+
+			.sendBtn {
+				height: 35px;
+				width: 25%;
+				color: #ff3f95;
+				background-color: transparent;
+				outline: none;
+				border-radius: 20px;
+				font-size: 70%;
+				border: 1.5px solid #ff3f95;
+			}
+
+			.msg_a{
+				position:relative;
+				background:#FDE4CE;
+				padding:10px;
+				min-height:10px;
+				margin-bottom:5px;
+				margin-right:10px;
+				border-radius:5px;
+			}
+			.msg_a:before{
+				content:"";
+				position:absolute;
+				width:0px;
+				height:0px;
+				border: 10px solid;
+				border-color: transparent #FDE4CE transparent transparent;
+				left:-20px;
+				top:7px;
+			}
+
+
+			.msg_b{
+				background:#EEF2E7;
+				padding:10px;
+				min-height:15px;
+				margin-bottom:5px;
+				position:relative;
+				margin-left:10px;
+				border-radius:5px;
+				word-wrap: break-word;
+			}
+			.msg_b:after{
+				content:"";
+				position:absolute;
+				width:0px;
+				height:0px;
+				border: 10px solid;
+				border-color: transparent transparent transparent #EEF2E7;
+				right:-20px;
+				top:7px;
+			}
+
+			/* The Modal (background) */
+			.modal {
+				display: none; /* Hidden by default */
+				position: fixed; /* Stay in place */
+				z-index: 1; /* Sit on top */
+				padding-top: 100px; /* Location of the box */
+				left: 0;
+				top: 0;
+				width: 100%; /* Full width */
+				height: 100%; /* Full height */
+				overflow: auto; /* Enable scroll if needed */
+				background-color: rgb(0,0,0); /* Fallback color */
+				background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+			}
+
+			.modal-content {
+				margin: auto;
+				width: 30%;
+			}
+
+			.close {
+				color: #aaaaaa;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+			}
+
+			.close:hover,
+			.close:focus {
+				color: #000;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			
+			.commentBox {
+				border-radius: 5px;
+				border: 0.5px solid gray;
+				font-size: 14px;
+				padding: 10px 15px;
+				margin: 5px 10px;
+				width: 88%;
+				height: 30%;
+				word-wrap: break-word;
+				rows: 4;
+				border: 1px solid #DDDDDD;
+			}
+			
+			#search {
+				width: 70%;
+				border: 2px solid #ccc;
+				background-color: white;
+				float: left;
+				border-radius: 10px;
+			}
+
+			
+			.imageUser{
+				cursor: pointer;
+			}
+		</style>
+		<!-- elements -->
+		
+			<div class = "header">
+				<div class = "nav">
+					<a id="logo" name="dashboard" href = "/dashboard"><img class = "logo" src ="images/logo.png" title = "let's uzap" /></a>
+					<paper-input label = "Search..." id = "search" ></paper-input>
+					<div class = "component" id="toolbar">
+						<a name="dashboard" href="/dashboard"><paper-icon-button src="images/home.png" title="Home"></paper-icon-button></a>
+						<paper-icon-button src="images/notification.png" title="Notification"></paper-icon-button></a>
+						<a name="user-profile" href="/user-profile"><paper-icon-button src="images/_tab.png" title="Profile"></paper-icon-button></a>
+						<paper-icon-button src="images/logout.png" title="Logout" on-click="logout"></paper-icon-button>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div id="body">
+			<div class = "card" id="card">
+				<div class = "card-details">
+					<img id = "user" src = "images/boy.svg"/>
+					<h3> @{{userPost}} </h3>
+					<h4 class = "card-datetime"> {{datePost}} </h4>
+				</div>
+				<div class = "post-card"><br/><br/>
+					<iron-label class="p-title">{{post}}</iron-label><br/>
+					<p class = "p-description" style="display:none;"> When I became a second honor Dean's Lister in my first year of college.</p>
+					
+					<div class = "p-comment" tabindex="0">
+						<paper-button toggles raised id = "btncmnt" on-click = "viewComment"> Comment</paper-button>
+						<paper-badge for="btncmnt" label={{numResponse}}></paper-badge>
+					</div>
+					
+					<paper-icon-button class = "p-wrong" id="delete" src="images/delete.png" alt="inbox" on-click="deletePost" style="display:none;"> </paper-icon-button>
+					
+					<paper-icon-button class = "p-wrong" id="dislike" src="images/invalid.png" alt="inbox" on-click="dislike"> </paper-icon-button>
+					<paper-badge for="dislike" label="{{numDislike}}" class="blue"> </paper-badge>
+					
+					<paper-icon-button class = "p-wrong" id="like" src="images/valid.jpg" alt="inbox" on-click="like"> </paper-icon-button>
+					<paper-badge for="like" label="{{numLike}}" class="blue"> </paper-badge>
+				</div>
+			</div>
+			
+		</div>
+		<div class = "comment-card" id="commentbox">
+					<div class = "comment-card-details">
+						<img id = "comment-user" src = "images/profile.png" />
+					</div>
+					<div class = "comment-post-card">
+					
+						<paper-textarea label = "Write your thoughts" value="{{comment}}" id = "comment" class = "commentBox"></paper-textarea>
+						<paper-button toggles raised id = "btncmnt" on-click = "sendComment"> Comment</paper-button>
+						<!--
+						<button id = "btncmnt"> Comment </button>-->
+					</div>
+			</div>
+		
+		<div class="chat_box">
+		<div class="chat_head">Chat (20)</div>
+		<div class="chat_body">
+		<div class="user" onclick = "openModal()"> <b> Krishna Teja</b></div>
+		<div class="user" onclick = "openModal()"> <b> Alexander Malcolm</b></div>
+		<div class="user" onclick = "openModal()"> <b> Dean Winchester</b></div>
+		<div class="user" onclick = "openModal()"> <b> Karla Smith</b></div>
+		<div class="user" onclick = "openModal()"> <b> Noelle Meinhardt</b></div>
+		<div class="user" onclick = "openModal()"> <b> Luke Casseus</b></div>
+		</br>
+		<b><label>Recent</label></b>
+		<div class="user" onclick = "openModal()"> Sarah Livsey</div>
+		<div class="user" onclick = "openModal()"> Francis Krouse</div>
+		<input type="text" class="search_input" placeholder="Search"></input>
+		</div>
+		
+	  </div>
+
+	<div id="msgModal" class="modal">
+
+	  <!-- Modal content -->
+	  <div class="modal-content">
+		<div class="msg_box" style="right:290px">
+		
+			<div class="msg_head">Chat
+			<div class="close">&times;</div>
+			</div>
+			
+			  <div class="msg_body">
+				  <div class="msg_a">message a</div>
+				  <div class="msg_b">message b</div>
+				  <div class="msg_a">message c</div>	
+				  <div class="msg_push"></div>
+			  </div> <!--msg_body-->
+			  
+			  <textarea class="msg_input" id="msg_input" rows="2"></textarea>
+			  <button class= "sendBtn" id = "sendMsg">Send</button>
+		</div>
+		
+	  </div>
+	  
+	</div>
+	<footer>
+	<center><br><br>
+	<div id="footer_text"> <font color="white">
+		This product is developed by G6.<br>
+		G6 2017 </font>
+	</div>
+	</center>
+	</footer>
+	
+	<iron-ajax
+		id = "dbPost"
+		url = "http://127.0.0.1:8080/db/posts?filter={'post':'{{post}}'}&filter={'createdBy':'{{userPost}}'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceived"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbLikePlus"
+		url = "http://127.0.0.1:8080/db/posts/{{postID}}"
+		method = "PATCH"
+		body = "{'likes':'{{numLike}}'}"
+		handle-as = "json"
+		content-type = "application/json";
+		on-response = "onSuccess"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbDislikePlus"
+		url = "http://127.0.0.1:8080/db/posts/{{postID}}"
+		method = "PATCH"
+		body = "{'dislikes':'{{numDislike}}'}"
+		handle-as = "json"
+		content-type = "application/json";
+		on-response = "onSuccess"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbCommentPlus"
+		url = "http://127.0.0.1:8080/db/posts/{{postID}}"
+		method = "PATCH"
+		body = "{'comments':'{{numResponse}}'}"
+		handle-as = "json"
+		content-type = "application/json";
+		on-response = "onSuccess"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbInsertLike"
+		url = "http://127.0.0.1:8080/db/likesDislikes"
+		body = '[{"post":"{{post}}", "createdBy":"{{userPost}}", "status":"LIKE", "likedDislikedBy":"{{username}}", "lastUpdated":"{{date}}"}]'
+		method = "POST"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "onSuccessInsert"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbInsertDisLike"
+		url = "http://127.0.0.1:8080/db/likesDislikes"
+		body = '[{"post":"{{post}}", "createdBy":"{{userPost}}", "status":"DISLIKE", "likedDislikedBy":"{{username}}", "lastUpdated":"{{date}}"}]'
+		method = "POST"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "onSuccessInsert"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbInsertComment"
+		url = "http://127.0.0.1:8080/db/posts"
+		body = '[{"post":"{{comment}}", "category":"null", "nature":"COMMENT", "createdBy":"{{username}}", "createdFor":"{{post}}", "comments":"0", "likes":"0", "dislikes":"0", "dateCreated":"{{date}}"}]'
+		method = "POST"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "onSuccessInsert"
+		debounce-duration="300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbComment"
+		url = "http://127.0.0.1:8080/db/posts?filter={'createdFor':'{{post}}'}&filter={'nature':'COMMENT'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceivedC"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbCommentId"
+		url = "http://127.0.0.1:8080/db/posts?filter={'post':'{{cmntClick}}'}&filter={'createdBy':'{{userCmntClick}}'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onReceivedId"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbCheckLikeDislike"
+		url = "http://127.0.0.1:8080/db/likesDislikes?filter={'createdBy':'{{userPost}}'}&filter={'post':'{{post}}'}&filter{'likedDislikedBy':'{{username}}'}"
+		method = "GET"
+		handle-as = "json"
+		content-type="application/json"
+		on-response = "onCheck"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	<iron-ajax
+		id = "dbDelete"
+		url = "{{url}}"
+		method = "DELETE"
+		handle-as = "json"
+		content-type = "application/json"
+		on-response = "onDeletedDB"
+		debounce-duration = "300">
+	</iron-ajax>
+	
+	
+	<div id="results" style="display:none;">fd</div>
+	<div id="results2" style="display:none;"></div>
+	<div id="results4"style="display:none;"></div>
+	<div id="results3" style="display:none;">dd</div>
+	
+	</template>
+	<script>
+	class MyForumboard extends Polymer.Element {
+      static get is() { return 'my-forumboard'; }
+	  
+		static get properties() {
+			return {
+			  username: {type:String},
+			  userPost: {type:String},
+			  post: {type:String},
+			  datePost: {type:Date},
+			  cmntClick: {type:String},
+			  userCmntClick: {type:String},
+			  numResponse: {type:Number},
+			  numLike: {type:Number},
+			  numDislike: {type:Number},
+			  postID: {type:Number},
+			  date: {type:Date},
+			  postArr: {type:Array},
+			  dateArr: {type:Array},
+			  numArr: {type:Array},
+			  userArr: {type:Array}, 
+			  comment: {type:String},
+			  postDel: {type:String},
+			  userDel: {type:String},
+			  dateDel: {type:String},
+			  url: {type:String}
+			}
+		}
+		
+		
+	  
+		ready(){
+			this.post = localStorage.getItem("postClicked");
+			this.date = new Date();
+			this.username = localStorage.getItem("username");
+			var xx = this.post;
+			this.post = xx.substring(0, xx.indexOf('@'));
+			this.userPost = xx.substring(xx.indexOf('@')+1, xx.lastIndexOf('@'));
+			this.datePost = xx.substring(xx.lastIndexOf('@')+1);
+			
+			super.ready();
+			
+			if (this.username==null){
+				this.$.toolbar.setAttribute("style","display:none");
+				this.$.commentbox.setAttribute("style", "display:none");
+				this.$.logo.setAttribute("href", "/home");
+				this.$.logo.setAttribute("name", "home");
+			}
+			if (this.username == this.userPost){
+				this.$.delete.setAttribute("style", "display: block");
+			}
+			
+			
+			this.$.dbPost.generateRequest();
+			this.$.dbComment.generateRequest();
+			this.$.dbCheckLikeDislike.generateRequest();
+		}
+	  
+		onReceived(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.results.innerHTML = response;
+	    }
+		
+		onCheck(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.results4.innerHTML = response;
+			if (response.includes(this.username)){
+				this.$.like.disabled = true;
+				this.$.dislike.disabled = true;
+				
+			}			
+		}
+	  
+		onReceivedC(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.results2.innerHTML = response;
+	    }
+		subscribe(){
+			this.$.dbCategory.generateRequest();
+			 var change = document.getElementById("subscribe");
+                if (change.innerHTML == "Subscribe")
+                {
+                    change.innerHTML = "Unsubscribe";
+					change.style.backgroundColor = "red";
+                }
+                else {
+                    change.innerHTML = "Subscribe";
+					change.style.backgroundColor = "#3f51b5";
+                }
+		}
+		
+		viewComment(){
+			//this.$.dbPost.generateRequest();
+			//this.$.dbComment.generateRequest();
+			this.getNum();
+			this.getCommentPost();
+			this.getComments();
+		}
+		
+		getNum(){
+			var response = this.$.results.innerHTML;
+			var res = this.$.results2.innerHTML;
+			var index = response.search('_id');
+			var use = response.substring(index+21);
+			var ctr = use.substring(0, use.indexOf('}')-5);
+			this.postID = ctr;
+			index = response.search('comments')+12;
+			use = response.substr(index);
+			ctr = use.substring(0, use.indexOf("}")-1);
+			this.numResponse = ctr;
+			var postTemp = this.$.results.innerHTML;
+			var ind = postTemp.search('comments')+12;
+			postTemp = postTemp.substr(ind); 
+			var end = postTemp.search('",'); 
+			var question = postTemp.substr(0, end); //comments
+			this.numResponse = question;
+			ind = postTemp.search('likes')+9;
+			postTemp = postTemp.substr(ind); 
+			end = postTemp.search('",'); 
+			question = postTemp.substr(0, end); //likes
+			this.numLike = question;
+			ind = postTemp.search('dislikes')+12;
+			postTemp = postTemp.substr(ind); 
+			end = postTemp.search('",'); 
+			question = postTemp.substr(0, end); //dislikes
+			this.numDislike = question;
+		}
+		
+		getCommentPost(){
+			var postTemp = this.$.results2.innerHTML;
+			var ind = 0;
+			var end = 0;
+			var question = "";
+			var tempArr = [];
+			for (var i=0; i<this.numResponse; i++){
+				ind = postTemp.search('"createdBy"')+14;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);
+			}
+			this.userArr = tempArr;
+			
+			ind = 0;
+			end = 0;
+			question = "";
+			tempArr = [];
+			postTemp = this.$.results2.innerHTML;
+			for (var i=0; i<this.numResponse; i++){
+				ind = postTemp.search('"post"')+9;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);	
+			}
+			this.postArr = tempArr;
+			
+			ind = 0;
+			end = 0;
+			question = "";
+			tempArr = [];
+			postTemp = this.$.results2.innerHTML;
+			for (i=0; i<this.numResponse; i++){
+				ind = postTemp.search('"dateCreated"')+19;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search(' GMT'); //end of question
+				question = postTemp.substr(0, end); //question
+				tempArr.push(question);
+			}
+			this.dateArr = tempArr;
+			
+			ind = 0;
+			end = 0;
+			question = "";
+			tempArr = [];
+			postTemp = this.$.results2.innerHTML;
+			for (i=0; i<this.numResponse; i++){
+				ind = postTemp.search('likes')+9;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //likes
+				tempArr.push(question);
+				ind = postTemp.search('dislikes')+12;
+				postTemp = postTemp.substr(ind); //start of question
+				end = postTemp.search('",'); //end of question
+				question = postTemp.substr(0, end); //dislikes
+				tempArr.push(question);
+			}
+			this.numArr = tempArr;
+		}
+		
+		getComments(){
+			var i=0;
+			var j=0;
+			var k=0;
+			var div="";
+			var div2="";
+			var img="";
+			var h3="";
+			var h4="";
+			var aTag="";
+			var p="";
+			var div3="";
+			var badge="";
+			var btn="";
+			var btn2="";
+			var span="";
+			
+			while(i<this.numResponse){
+				div = document.createElement("div");
+				div.className = "reply-card";
+				this.$.body.appendChild(div);
+				
+				div2 = document.createElement("div");
+				div2.className = "reply-card-details";
+				div.appendChild(div2);
+				
+				img = document.createElement("img");
+				img.id = "@"+this.userArr[i];
+				img.className = "reply-user";
+				img.src = "images/boy.svg";		//profile pic
+				img.onclick = this.searchUser;
+				div2.appendChild(img);
+				
+				h3 = document.createElement("h3");
+				h3.id = "@"+this.userArr[i];
+				h3.onclick = this.searchUser;
+				h3.innerHTML = "@"+this.userArr[i];			//username
+				div2.appendChild(h3);
+				
+				h4 = document.createElement("h4");
+				h4.innerHTML = this.dateArr[i];
+				div2.appendChild(h4);
+				
+				div2 = document.createElement("div");
+				div2.className = "reply-post-card";
+				div.appendChild(div2);
+				
+				p = document.createElement("p");		//post
+				p.className="p-title";
+				p.innerHTML = this.post;
+				div2.appendChild(p);
+				
+				p = document.createElement("p");			//answer
+				p.className="p-description";
+				p.innerHTML = this.postArr[i];
+				div2.appendChild(p);				
+				
+				/*btn = document.createElement("paper-icon-button");    //yung check icon
+				btn.className = "p-wrong";
+				btn.setAttribute("id","wrong"+this.postArr[i]+"@"+this.userArr[i]);
+				btn.src = "images/invalid.png";
+				btn.alt = "inbox";
+				btn.onclick = this.commentDislike;
+				div2.appendChild(btn);
+				
+				
+				badge = document.createElement("paper-badge");
+				badge.for= "wrong"+this.postArr[i]+"@"+this.userArr[i];
+				badge.label = this.numArr[k];
+				div2.appendChild(badge);
+				
+				btn2 = document.createElement("paper-icon-button");   //yung x icon
+				btn2.className = "p-check";
+				btn2.setAttribute("id","right"+this.postArr[i]+"@"+this.userArr[i]);
+				btn2.src = "images/valid.jpg";
+				btn2.alt = "inbox";
+				btn2.onclick = this.commentLike;
+				div2.appendChild(btn2);
+				
+				
+				badge = document.createElement("paper-badge");
+				badge.for= "right"+this.postArr[i]+"@"+this.userArr[i];
+				badge.label = this.numArr[k];
+				div2.appendChild(badge);*/
+				
+				i++;
+				k = k+2;
+			}
+		}
+		
+		searchUser(){
+			var xx = this.id;
+			xx = xx.substring(1);
+			localStorage.setItem("userSearch", xx)
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("forumboard"));
+			openLink = openLink + "user-search-profile";
+			window.open(openLink, "_self");
+		}	
+		
+		like(){
+			this.numLike = parseInt(this.numLike)+1;
+			this.$.like.setAttribute("disabled","true");
+			this.$.dislike.setAttribute("disabled","true");
+			this.$.dbLikePlus.generateRequest();
+			this.$.dbInsertLike.generateRequest();
+		}
+		
+		dislike(){
+			this.numDislike = parseInt(this.numDislike)+1;
+			this.$.like.setAttribute("disabled","true");
+			this.$.dislike.setAttribute("disabled","true");
+			this.$.dbDislikePlus.generateRequest();
+			this.$.dbInsertDisLike.generateRequest();
+		}
+		
+		commentLike(){
+			var xx = this.id;
+			xx = xx.substring(5);
+			this.cmntClick=xx.substring(0, xx.indexOf('@'));
+			this.userCmntClick =  xx.substring(xx.indexOf('@')+1);
+			//this.$.dbCommentId.generateRequest();
+			
+		}
+		
+		commentDislike(){
+			var xx = this.id;
+			xx = xx.substring(5);
+			this.cmntClick=xx.substring(0, xx.indexOf('@'));
+			this.userCmntClick =  xx.substring(xx.indexOf('@')+1)
+		}
+		
+		onReceivedId(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.results3.innerHTML = response;
+	    }
+		
+		sendComment(){
+			var temp = (this.date).toString();
+			var end = temp.indexOf(" GMT");
+			temp = temp.slice(4, end);
+			var div = document.createElement("div");
+			div.className = "reply-card";
+			this.$.body.appendChild(div);
+			
+			var div2 = document.createElement("div");
+			div2.className = "reply-card-details";
+			div.appendChild(div2);
+			
+			var img = document.createElement("img");
+			img.id = "@"+this.username;
+			img.className = "reply-user";
+			img.src = "images/boy.svg";		//profile pic
+			img.onclick = this.searchUser;
+			div2.appendChild(img);
+			
+			var h3 = document.createElement("h3");
+			h3.onclick = this.searchUser;
+			h3.innerHTML = "@"+this.username;			//username
+			div2.appendChild(h3);
+			
+			var h4 = document.createElement("h4");
+			h4.innerHTML = temp;
+			div2.appendChild(h4);
+			
+			div2 = document.createElement("div");
+			div2.className = "reply-post-card";
+			div.appendChild(div2);
+			
+			var p = document.createElement("p");		//post
+			p.className="p-title";
+			p.innerHTML = this.post;
+			div2.appendChild(p);
+			
+			p = document.createElement("p");			//answer
+			p.className="p-description";
+			p.innerHTML = this.comment;
+			div2.appendChild(p);
+			
+			this.numResponse = parseInt(this.numResponse)+1;
+			this.$.dbCommentPlus.generateRequest();
+			this.$.dbInsertComment.generateRequest();
+			ready();
+			
+			this.comment="";
+		}
+		
+		onReceivedID(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			this.$.idCol.innerHTML = response;
+		}
+		
+		deletePost(){
+			var temp = this.$.results.innerHTML;
+			var start = temp.indexOf("$oid")+8;
+			var end = temp.indexOf("post")-12;
+			var id = temp.substring(start, end);
+			if (confirm("This is a great topic. Are you sure? :( ")){
+				this.url = "http://127.0.0.1:8080/db/posts/" + id;
+				this.$.dbDelete.generateRequest();
+				var openLink = window.location.href;
+				openLink= openLink.toString();
+				openLink = openLink.substring(0, openLink.indexOf("forumboard"));
+				openLink = openLink + "user-profile";
+				window.open(openLink, "_self");
+			}
+			
+				
+		}
+		
+		logout(){
+			localStorage.removeItem("username");
+			var openLink = window.location.href;
+			openLink= openLink.toString();
+			openLink = openLink.substring(0, openLink.indexOf("dashboard"));
+			openLink = openLink + "home";
+			window.open(openLink, "_self");
+		}
+    }
+	
+	
+
+    window.customElements.define(MyForumboard.is, MyForumboard);
+	</script>
+	<script>
+	Polymer({
+		is: 'my-forumboard'
+	});
+	</script>
+</dom-module>
+

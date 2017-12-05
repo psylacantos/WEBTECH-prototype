@@ -1,0 +1,532 @@
+<!-- imports -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" href="facivon.ico">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">		
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">	
+
+<dom-module id="my-user-search">
+	<template>
+		<style>
+		:host {
+			display: block;
+			padding: 16px;
+			background: #003399;
+		}
+		
+		.nav {
+			width: 100%;
+			height: 60px;
+			justify-content: flex-start;
+			margin: 4px 4px;
+			background-color: #66ccff;
+			display: flex;
+		}
+		
+		.header {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		
+		.logo {
+			width: 80px;
+			height: 70px;
+			
+		}
+		
+		.inputSearch {
+			width: 50%;
+			height: 50px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			font-size: 15px;
+			background-color: white;
+			background-image: url('images/search.png');
+			background-size: 25px 25px;
+			background-position: 10px 11px; 
+			background-repeat: no-repeat;
+			padding: 12px 20px 12px 40px;
+			margin-top: 4px;
+		}
+		
+		.component {
+			width: 45%;
+			height: 50px;
+			margin-top: 4px;
+			display: flex;
+			justify-content: flex-end;
+		}
+		
+		.component paper-icon-button:hover {
+			background-color: #93d7f9;
+		}
+		.material-icons{
+			font-size: 45px;
+			margin-top: 4px;
+			color: black;
+		}
+		
+		.profile {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin-top: 20px;
+		}
+		#pic {
+		max-width: 150px;
+		min-width: 150px;
+		}
+		#circle {
+			display: flex;
+			width: 10px;
+			height: 10px;
+			max-width: 10px;
+			min-width: 10px;
+			border-radius: 50px;
+			background: green;
+			margin-left: 5px;
+			margin-top: 6.5px;
+		}
+		.details{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		
+		}
+		.name {
+			display: flex;
+		}
+		
+		.uname {
+			display: flex;
+			margin-top: -15px;
+		}
+
+		.numposts{
+			margin-left: -200px;
+			margin-top: -1px;
+		}
+		.posts {
+			display: flex;
+			margin-left: -200px;
+			margin-top: -15px;
+		}
+		
+		.numlikes {
+			display: flex;
+			margin-left: 0px;
+			margin-top: -63px;
+		}
+		
+		.likes{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 0px;
+		}
+		
+		.numfollowers{
+			display: flex;
+			margin-left: 200px;
+			margin-top: -63px; 
+		}
+		
+		.followers{
+			display: flex;
+			margin-top: -15px;
+			margin-left: 200px;
+		}
+		.hr{
+			background-color: white;
+			width:100%;
+		}
+		.style1{
+			border-top: 2px solid #000000;
+		}
+		.content button, .card-details button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		.follow, .chat, .block, paper-button{
+			float: right;
+		}
+		.content button:hover{
+			background-color: #6a7eed;
+		}
+		.follow, .chat, .other{
+			float: right;
+		}
+		
+		.card{
+			display: flex;
+			background-color: #66ccff;
+		}
+		
+		
+		#user {
+			width: 70px;
+			height: 70px;
+			margin-top: 10px;
+			margin-left: 10px;
+		}
+
+		
+		.card h4{
+			margin-top: 20px;
+		}
+		
+		.post-card {
+			box-shadow: 4px 8px 10px 0 rgba(0,0,0,0.2);
+			transition: 0.3s;
+			width: 70%;
+			background-color: white;
+			border-radius: 5px;
+			margin-top: 5px;
+			margin-left: 10px;
+		}
+		.see-card {
+			transition: 0.3s;
+			width: 100%;
+			background-color: #cbfffa;
+			font-size: 14px;
+			border-radius: 5px;
+			margin: 0.5cm 0cm 0.20cm 0cm;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		.p-title{
+			font-size: 20px;
+			font-weight: bold;
+			color: black;
+			text-align: left;
+		}
+		
+		.p-description {
+			font-size: 15px;
+			color: black;
+			text-align: left;
+		}
+		
+		.p-comment{
+				font-size:15px;
+				font-weight: bold;
+				color: black;
+				text-align: left;
+				margin-top: 40px;
+				display: inline-block;
+				margin-left: 30px;
+				margin-right: 30px;
+		}
+		
+		 .p-comment > paper-badge {
+			--paper-badge-margin-left: 20px;
+			--paper-badge-margin-bottom: 0px;
+		}
+		
+		.p-check, .p-wrong{
+			font-size:15px;
+			font-weight: bold;
+			color: black;
+			text-align: right;
+			display: inline-block;
+			float: right;
+			margin-top: 40px;
+		}
+		.nav-tabs{
+			background-color: #cbfffa;
+		}
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+			width: 100%;
+			height: 100%;
+		}
+		.flex-item1 {
+			width: 25%;
+			height: 100%;
+			margin: 10px;
+			background-color: #cbfffa;
+			box-shadow: 0px 8px 10px 0 rgba(0,0,0,0.2);
+			margin-left: 7px;
+		}
+		.flex-item2 {
+			background-color:  #cbfffa;
+			width: 140%;
+			height: 100%;
+			margin: 10px;
+			
+		}
+		
+		.circle {
+			width: 20px;
+			height: 20px;
+			border-radius: 100%;
+			position: fixed;
+		}
+		.content {
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+			float: right;
+			position: absolute;
+			right: 0.5px;
+			top: 5px;
+		}
+		paper-tabs {
+			font-family: 'Roboto', 'Noto', sans-serif;
+			-webkit-font-smoothing: antialiased;
+			width: 100%;
+			text-transform: uppercase;
+			margin-bottom: 1px;
+		}
+		paper-button{
+			background-color: #3f51b5;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+			height: 25%;
+		}
+		#search {
+			width: 70%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: left;
+			border-radius: 10px;
+		}
+		
+		</style>
+		<!-- elements -->
+		
+		<div class = "header">
+			<div class = "nav">
+				<a href = "#"><img class = "logo" src ="images/logo.png" title = "let's uzap" /></a>
+				<paper-input label = "Search..." id = "search" ></paper-input>
+				<div class = "component">
+					<a name="dashboard" href="/dashboard"><paper-icon-button src="images/home.png" title="Home"></paper-icon-button></a>
+					<paper-icon-button src="images/notification.png" title="Notification"></paper-icon-button></a>
+					<a name="user-profile" href="/user-profile"><paper-icon-button src="images/_tab.png" title="Profile"></paper-icon-button></a>
+					<paper-icon-button src="images/logout.png" title="Logout" on-click="logout"></paper-icon-button>
+				</div>
+			</div>
+		</div>
+		
+		</br>
+		
+		<div class="flex-container">
+			<div class="flex-item1">
+				<div>
+				<h2> Filter Results	</h2>
+				</div>
+				<label id="label3">Posted By:</label>
+					<paper-radio-group selected="a" allow-empty-selection aria-labelledby="label3">
+						<paper-radio-button name="a"> Anyone </paper-radio-button> 
+						<paper-radio-button name="y"> You </paper-radio-button>
+						<paper-radio-button name="f"> Followers </paper-radio-button>
+					</paper-radio-group>
+				<label id="label4">Date Posted:</label>
+					<paper-radio-group selected="anydate" allow-empty-selection aria-labelledby="label3">
+						<paper-radio-button name="anydate"> Any Date </paper-radio-button> 
+						<paper-radio-button name="2017"> 2017 </paper-radio-button>
+						<paper-radio-button name="2016"> 2016 </paper-radio-button>
+						<paper-radio-button name="2015"> 2015 </paper-radio-button>
+						<paper-radio-button name="choosedate"> Choose Date </paper-radio-button>
+					</paper-radio-group>
+			</div>
+		
+		<div class="flex-item2">
+			<paper-tabs selected="0">
+				<paper-tab>ALL</paper-tab>
+				<paper-tab>USERS</paper-tab>
+				<paper-tab>POSTS</paper-tab>
+			</paper-tabs>
+
+			<div class="tab-content">
+				<div id="menu1" class="tab-pane fade in active">
+					<!-- contents are from menu 2 and menu3 -->
+				</div>
+				<div id="menu2" class="tab-pane fade">
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> John Smith </h3>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> @johnsmithy </p></a>
+						</div>
+						
+						<paper-button toggles raised id = "follow"> Follow</paper-button>
+
+					</div>
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> Jhon Smith </h3>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> @the_smith </p></a>
+						</div>
+						<paper-button toggles raised id = "follow"> Follow</paper-button>
+					</div>
+					
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> John Smity </h3>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> @smithhy </p></a>
+						</div>
+						<paper-button toggles raised id = "follow" onclick = "follow()"> Follow</paper-button>
+					</div>
+					<div class = "card">
+						<div class = "see-card">
+							<p align="center">See More</p> 
+						</div>
+					</div>
+				</div>
+				
+				<div id="menu3" class="tab-pane fade">
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> @johnsmith </h3>
+							<h4 class = "card-datetime"> 10/25/17 11:00 PM </h4>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> What was the happiest moment of your life? </p></a>
+							<p class = "p-description"> When I became a second honor Dean's Lister in my first year of college.</p>
+							<div class = "p-comment" tabindex="0">
+								<span> Comment </span>
+								<paper-badge label="7"></paper-badge>
+							</div>
+							
+							<paper-icon-button class = "p-check" id="number1" src="images/invalid.png"  alt="inbox"> </paper-icon-button>
+							<paper-badge for="number1" label="2" class="blue"> </paper-badge>
+							
+							<paper-icon-button class = "p-wrong" id="number2" src="images/valid.jpg" alt="inbox"> </paper-icon-button>
+							<paper-badge for="number2" label="9" class="blue"> </paper-badge>
+						</div>
+					</div>
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> @johnsmith </h3>
+							<h4 class = "card-datetime"> 10/25/17 11:00 PM </h4>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> What was the happiest moment of your life? </p></a>
+							<p class = "p-description"> When I became a second honor Dean's Lister in my first year of college.</p>
+							<div class = "p-comment" tabindex="0">
+								<span> Comment </span>
+								<paper-badge label="7"></paper-badge>
+							</div>
+							
+							<paper-icon-button class = "p-check" id="number3" src="images/invalid.png"  alt="inbox"> </paper-icon-button>
+							<paper-badge for="number3" label="4" class="blue"> </paper-badge>
+							
+							<paper-icon-button class = "p-wrong" id="number4" src="images/valid.jpg" alt="inbox"> </paper-icon-button>
+							<paper-badge for="number4" label="7" class="blue"> </paper-badge>
+						</div>
+					</div>
+					<div class = "card">
+						<div class = "card-details">
+							<img id = "user" src = "profile.png" />
+							<h3> @johnsmith </h3>
+							<h4 class = "card-datetime"> 10/25/17 11:00 PM </h4>
+						</div>
+						<div class = "post-card">
+							<a href="#"><p class = "p-title"> What was the happiest moment of your life? </p></a>
+							<p class = "p-description"> When I became a second honor Dean's Lister in my first year of college.</p>
+							<div class = "p-comment" tabindex="0">
+								<span> Comment </span>
+								<paper-badge label="7"></paper-badge>
+							</div>
+							
+							<paper-icon-button class = "p-check" id="number5" src="images/invalid.png"  alt="inbox"> </paper-icon-button>
+							<paper-badge for="number5" label="5" class="blue"> </paper-badge>
+							
+							<paper-icon-button class = "p-wrong" id="number6" src="images/valid.jpg" alt="inbox"> </paper-icon-button>
+							<paper-badge for="number6" label="3" class="blue"> </paper-badge>
+						</div>
+					</div>
+					<div class = "card">
+						<div class = "see-card">
+							<p align="center">See More</p> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+		<footer>
+			<center><br><br>
+				<div id="footer_text"> <font color="white">
+					This product is developed by G6.<br>
+					G6 2017 </font>
+				</div>
+			</center>
+		</footer>
+	
+	</template>
+	
+	<script>
+	class MyUserSearch extends Polymer.Element {
+      static get is() { return 'my-user-search'; }
+	  
+	  
+    }
+
+    window.customElements.define(MyUserSearch.is, MyUserSearch);
+	</script>
+	
+	<script>
+	Polymer({
+		is: 'my-user-search'
+	});
+	</script>
+</dom-module>
+

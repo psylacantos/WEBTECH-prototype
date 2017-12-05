@@ -1,0 +1,400 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+<link rel="lazy-import" href="my-dashboard.html">
+<link rel="lazy-import" href="my-topic-board.html">
+<script src="User.js"></script>
+
+<dom-module id="my-home">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+	  
+	    .div-body{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			background-color: #003399;
+			height: 100%;
+		}
+		
+		.div-top-bar{
+			display: flex;
+			margin: 4px 20px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+			width: 98%;
+			height: 20%;
+		}
+		
+		.div-login{
+			width: 50%;
+			height: 50%;
+		}
+		
+		.div-search{
+			width:  50%;
+			height: 50%;
+		}
+		
+		.div-register{
+			width: 50%;
+			height: 30%;
+		}
+		
+		.div-image{
+			display: flex;
+			width: 98%;
+			justify-content: center;
+			flex-direction: column;
+		}
+		
+		.inputSearch {
+			width: 50%;
+			height: 50px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			font-size: 12px;
+			background-color: white;
+			background-image: url('images/search.png');
+			background-size: 25px 25px;
+			background-position: 10px 10px; 
+			background-repeat: no-repeat;
+			padding: 12px 20px 12px 40px;
+			-webkit-transition: width 0.4s ease-in-out;
+			transition: width 0.4s ease-in-out;
+			margin-top: 4px;
+		}
+		
+		.inputSearch:focus{
+			width: 90%;
+		}
+		
+		.login_button {
+			background-color: #cbfffa;
+			border: none;
+			color: black;
+			padding: 10px 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 15px 10px;
+			cursor: pointer;
+			float:right;
+		}
+		
+		.login_button:hover {
+			background-color: #5c6bc0;
+		}
+		
+		.input {
+			width: 32%;
+			height: 50px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 10px;
+			font-size: 12px;
+			background-color: white;
+			padding: 12px 12px 12px 12px;
+			text-align: left;
+			margin-top: 4px;
+			margin-right: 10px;
+			float: right;
+		}
+		
+		.paragraphRegister{
+			font-size: 14px;
+			display: block;
+			margin: auto; /*to set the p tag center*/
+			width: 40%;
+			text-align: right;
+		}
+		
+		img{
+			cursor: pointer;
+		}
+		
+		.ch{
+			font-family: Harrington, fantasy; 
+			font-size: 20px;
+		}
+		
+		.p{
+			font-size: 40px;
+			font-family: Harrington, fantasy;
+			text-align: center;
+			font-weight: bold;
+		}
+	
+		.pp{
+			font-size: 55px;
+			font-family: Harrington, fantasy;
+			text-align: center;
+			font-weight: bold;
+		}	
+		
+		.registerA{
+			color: white;
+			font-weight: bold;
+		}
+		
+		.registerA:hover{
+			color: #cbfffa
+		}
+		
+		#search {
+			width: 70%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: left;
+			border-radius: 10px;
+		}
+		
+		#username {
+			width: 30%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: right;
+			border-radius: 10px;
+			margin-right: 20px;
+		}
+		
+		#password {
+			width: 30%;
+			border: 2px solid #ccc;
+			background-color: white;
+			float: right;
+			border-radius: 10px;
+		}
+		
+		.topicboardImg{
+			width: 90px;
+			height: 90px;
+		}
+    </style>
+
+    <div class="div-body">
+		<div class="div-top-bar">
+			<div class="div-search">
+				<paper-input label = "Search..." id = "search" ></paper-input>
+				<!--<input type="text" id="search" class="inputSearch" placeholder="Search..">-->
+			</div>
+			<div class="div-login"> <!-- arrangement of input are top to bottom in html code, right to left in actual webpage-->
+				<paper-button toggles raised class = "login_button" on-click = "login">LOGIN</a></paper-button>
+				<paper-input label = "Password" type = "password" id = "password" value="{{password}}"></paper-input>
+				<paper-input label = "Username" id = "username" value="{{username}}"></paper-input>
+				<p class="paragraphRegister"><font color="white">No account? <a class="registerA" name="user-registration" href="/user-registration">Register </a></font></p>
+			</div>
+		
+		</div>
+			<table class="table">
+				<tr>
+					<td class="ch" colspan="7"><b><font color="white">Choose a topic and...</font></b></td>
+				</tr>
+				<tr>
+					<td class="p" colspan="2"><font color="white">Let's</font></td>
+					<!--<td><a name="topic-board" href="/topic-board"><img alt="advice" src="images/advice.png" width="80px" height="80px" onclick="trial()"/></a></td>-->
+					<td><paper-icon-button src="images/advice.png" class="topicboardImg" on-click="advice"></paper-icon-button></td>
+					<td><paper-icon-button src="images/arts.png" class="topicboardImg" on-click="arts"></paper-icon-button></td>
+					<td><paper-icon-button src="images/business.png" class="topicboardImg" on-click="business"></paper-icon-button></td>
+					<td><paper-icon-button src="images/education.png" class="topicboardImg" on-click="education"></paper-icon-button></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><paper-icon-button src="images/entertainment.png" class="topicboardImg" on-click="entertainment"></paper-icon-button></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><paper-icon-button src="images/horror.png" class="topicboardImg" on-click="horror"></paper-icon-button></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="pp"><font color="white">U</font></td>
+					<td><paper-icon-button src="images/lifestyle.png" class="topicboardImg" on-click="lifestyle"></paper-icon-button></td>
+					<td><paper-icon-button src="images/news.png" class="topicboardImg" on-click="news"></paper-icon-button></td>
+					<td><paper-icon-button src="images/science.png" class="topicboardImg" on-click="science"></paper-icon-button></td>
+					<td><paper-icon-button src="images/sports.png" class="topicboardImg" on-click="sports"></paper-icon-button></td>
+					<td class="pp"><font color="white">AP</font></td>
+				</tr>
+			</table>
+	</div>
+	
+	
+	<iron-ajax
+		id = "dbQuery"
+		url = "http://127.0.0.1:8080/db/users?filter={'username':'{{username}}'}&filter={'password':'{{password}}'}&filter={'status':'ACTIVE'}"
+		method = "GET"
+		handle-as = "json"
+		on-response = "onReceivedDB"
+		debounce-duration = "300">
+	</iron-ajax>
+  </template>
+
+  <script>
+    class MyHome extends Polymer.Element {
+      static get is() { return 'my-home'; }
+	  
+		static get properties() {
+			return {
+			  search: {type: String},
+			  username: {type:String},
+			  password: {type:String},
+			  topic: {type:String}
+			}
+		}
+	  
+	    onReceivedDB(e){
+			const resp = e.detail.response;
+			var response = JSON.stringify(resp, null, ' ');
+			var responseIndex = response.search(this.username);
+			//var use = response.substring(0, response.indexOf('"'));
+			//this.$.results.innerHTML = use + "\n";
+			if (responseIndex == -1){
+				alert("Incorrect username/password!");
+			}
+			else{
+				var openLink = window.location.href;
+				openLink= openLink.toString();
+				openLink = openLink.substring(0, openLink.indexOf("home"));
+				openLink = openLink + "dashboard";
+				window.open(openLink, "_self");
+			}
+		}
+	  login(){
+		if (this.username==null)
+			alert("Please input USERNAME.");
+		else if (this.password==null)
+			alert("Please input PASSWORD.");
+		else{
+			localStorage.setItem("username", this.username);
+			this.$.dbQuery.generateRequest();
+		}	
+	  }
+	  
+	  advice(){
+		localStorage.setItem("categoryClicked","Advice");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  arts(){
+		localStorage.setItem("categoryClicked","Arts");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  business(){
+		localStorage.setItem("categoryClicked","Business");
+		alert(localStorage.getItem("categoryClicked"));
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  education(){
+		localStorage.setItem("categoryClicked","Education");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  entertainment(){
+		localStorage.setItem("categoryClicked","Entertainment");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  horror(){
+		localStorage.setItem("categoryClicked","Horror");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  lifestyle(){
+		localStorage.setItem("categoryClicked","Lifestyle");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  news(){
+		localStorage.setItem("categoryClicked","News");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  sports(){
+		localStorage.setItem("categoryClicked","Sports");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+	  
+	  science(){
+		localStorage.setItem("categoryClicked","Science");
+		var openLink = window.location.href;
+		openLink= openLink.toString();
+		openLink = openLink.substring(0, openLink.indexOf("home"));
+		openLink = openLink + "topic-board";
+		window.open(openLink, "_self");
+	  }
+    }
+
+    window.customElements.define(MyHome.is, MyHome);
+  </script>
+  
+</dom-module>
